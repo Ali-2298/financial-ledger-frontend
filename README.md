@@ -1,3 +1,4 @@
+```mermaid
 graph TD
     A["📘 Financial Ledger Dashboard<br/>GET /ledger<br/><br/>User sees:<br/>• List of all ledger accounts<br/>• Account names & balances<br/>• Total debits/credits summary<br/>• Add New Transaction button<br/>• Search/filter options (by date, account, type)"]
 
