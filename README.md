@@ -2,35 +2,32 @@
 =======
 ```mermaid
 graph TD
-    A["📘 Financial Ledger Dashboard<br/>GET /ledger<br/><br/>User sees:<br/>• List of all ledger accounts<br/>• Account names & balances<br/>• Total debits/credits summary<br/>• Add New Transaction button<br/>• Search/filter options (by date, account, type)"]
+    A["📘 Financial Ledger Dashboard<br/>GET /ledger<br/><br/>User sees:<br/>• Total Income vs Total Expenses summary<br/>• Recent transactions list<br/>• Filters (by date, type, category)<br/>• Button: Add New Transaction"]
 
-    B["📄 Account Details Page<br/>GET /ledger/:accountId<br/><br/>User sees:<br/>• Account name & type<br/>• Transaction history (Date, Description, Debit, Credit, Balance)<br/>• Running total balance<br/>• Edit/Delete transaction options<br/>• Add Adjustment button"]
+    B["📄 Transaction Details Page (Optional)<br/>GET /transactions/:id<br/><br/>User sees:<br/>• Type (Income or Expense)<br/>• Category<br/>• Amount<br/>• Description<br/>• Transaction Date<br/>• Edit / Delete buttons"]
 
-    E["➕ Add New Transaction Form<br/>POST /transactions<br/><br/>Form fields:<br/>• Account (dropdown)<br/>• Date<br/>• Description<br/>• Debit (number, min: 0)<br/>• Credit (number, min: 0)<br/>• Save/Cancel buttons"]
+    E["➕ Add New Transaction Form<br/>POST /transactions<br/><br/>Form fields:<br/>• Type (Income | Expense)<br/>• Category (changes based on selected Type)<br/>• Amount (number)<br/>• Description (text)<br/>• Date (calendar select)<br/>• Submit / Cancel"]
 
-    F["✏️ Edit Transaction Form<br/>PUT /transactions/:id<br/><br/>Pre-filled form:<br/>• Current account, date, and details<br/>• Editable debit/credit fields<br/>• Update/Delete/Cancel buttons"]
+    F["✏️ Edit Transaction Form<br/>PUT /transactions/:id<br/><br/>Pre-filled fields:<br/>• Type (locked or changeable)<br/>• Category<br/>• Amount<br/>• Description<br/>• Date<br/>• Update / Delete / Cancel buttons"]
 
-    I["🗑️ Delete Confirmation<br/>DELETE /transactions/:id<br/><br/>User sees:<br/>• Confirmation message<br/>• Transaction summary<br/>• Confirm/Cancel buttons<br/>• Warning about data loss"]
+    I["🗑️ Delete Confirmation<br/>DELETE /transactions/:id<br/><br/>User sees:<br/>• Summary: Type + Amount + Category + Date<br/>• Confirm / Cancel<br/>• Warning: Action cannot be undone"]
 
-    %% Main navigation flow
-    A -->|"Click account"| B
+    %% Navigation Flow
+    A -->|"View details"| B
+    A -->|"Add Transaction"| E
 
-    %% Create actions
-    A -->|"Add New Transaction"| E
-    E -->|"Save successful"| A
+    E -->|"Save Successful"| A
     E -->|"Cancel"| A
 
-    %% Edit/Delete transaction actions
     B -->|"Edit Transaction"| F
-    F -->|"Update successful"| B
+    F -->|"Update Successful"| B
     F -->|"Cancel"| B
+    
     B -->|"Delete Transaction"| I
-    I -->|"Confirm delete"| A
+    I -->|"Confirm Delete"| A
     I -->|"Cancel"| B
-    F -->|"Delete from edit"| I
 
-    %% Back navigation
-    B -->|"Back to dashboard"| A
+    B -->|"Back to Dashboard"| A
 
     %% Styling
     classDef primaryPage fill:#e8f5e8,stroke:#27ae60,stroke-width:3px
