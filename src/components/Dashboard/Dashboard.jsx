@@ -103,16 +103,27 @@ const Dashboard = () => {
             required
           />
 
-          <label htmlFor="type">Type:</label>
+          <label htmlFor="account Type">Account Type:</label>
           <select
-            id="type"
-            name="type"
+            id="account-type"
+            name="account-type"
             value={newTransaction.type}
             onChange={handleInputChange}
           >
-            <option value="expense">Expense</option>
             <option value="income">Income</option>
+            <option value="outcome">Outcome</option>
           </select>
+
+
+          <label htmlFor="transaction-date" >Transaction Date:</label>
+          <input
+            id="transaction-date"
+            name="transaction-date"
+            type="date"
+            value={newTransaction.transactionDate}
+            onChange={handleInputChange}
+            required
+          />
 
           <button type="submit">Add Transaction</button>
         </form>
