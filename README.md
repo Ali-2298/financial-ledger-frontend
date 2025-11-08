@@ -1,16 +1,40 @@
-# React + Vite
+```mermaid
+graph TD
+    A["📘 Financial Ledger Dashboard<br/>GET /ledger<br/><br/>User sees:<br/>• List of all ledger accounts<br/>• Account names & balances<br/>• Total debits/credits summary<br/>• Add New Transaction button<br/>• Search/filter options (by date, account, type)"]
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+    B["📄 Account Details Page<br/>GET /ledger/:accountId<br/><br/>User sees:<br/>• Account name & type<br/>• Transaction history (Date, Description, Debit, Credit, Balance)<br/>• Running total balance<br/>• Edit/Delete transaction options<br/>• Add Adjustment button"]
 
-Currently, two official plugins are available:
+    E["➕ Add New Transaction Form<br/>POST /transactions<br/><br/>Form fields:<br/>• Account (dropdown)<br/>• Date<br/>• Description<br/>• Debit (number, min: 0)<br/>• Credit (number, min: 0)<br/>• Save/Cancel buttons"]
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+    F["✏️ Edit Transaction Form<br/>PUT /transactions/:id<br/><br/>Pre-filled form:<br/>• Current account, date, and details<br/>• Editable debit/credit fields<br/>• Update/Delete/Cancel buttons"]
 
-## React Compiler
+    I["🗑️ Delete Confirmation<br/>DELETE /transactions/:id<br/><br/>User sees:<br/>• Confirmation message<br/>• Transaction summary<br/>• Confirm/Cancel buttons<br/>• Warning about data loss"]
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+    %% Main navigation flow
+    A -->|"Click account"| B
 
-## Expanding the ESLint configuration
+    %% Create actions
+    A -->|"Add New Transaction"| E
+    E -->|"Save successful"| A
+    E -->|"Cancel"| A
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+    %% Edit/Delete transaction actions
+    B -->|"Edit Transaction"| F
+    F -->|"Update successful"| B
+    F -->|"Cancel"| B
+    B -->|"Delete Transaction"| I
+    I -->|"Confirm delete"| A
+    I -->|"Cancel"| B
+    F -->|"Delete from edit"| I
+
+    %% Back navigation
+    B -->|"Back to dashboard"| A
+
+    %% Styling
+    classDef primaryPage fill:#e8f5e8,stroke:#27ae60,stroke-width:3px
+    classDef formPage fill:#fff3cd,stroke:#ffc107,stroke-width:2px
+    classDef deletePage fill:#f8d7da,stroke:#dc3545,stroke-width:2px
+
+    class A,B primaryPage
+    class E,F formPage
+    class I deletePage
