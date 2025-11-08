@@ -6,10 +6,10 @@ const Account = () => {
 
     const [accounts, setAccounts] = useState([]);
     const [newAccount, setNewAccounts] = useState({
-        name: "",
-        type: "",
-        number: "",
-        type: "expense"
+        accountName: "",
+        accountType: "",
+        accountNumber: "",
+        balance: ""
     });
 
     useEffect(() => {
@@ -57,10 +57,10 @@ const Account = () => {
             setAccounts([...Accounts, newAccount]);
 
             setNewAccounts({
-                number: "",
-                type: "",
-                name: "",
-                type: "expense"
+                accountName: "",
+                accountType: "",
+                accountNumber: "",
+                balance: ""
             });
         } catch (err) {
             console.error('Submit error:', err);
@@ -73,20 +73,19 @@ const Account = () => {
                 <h3>Add New Account</h3>
                 <form onSubmit={handleSubmit}>
 
-                    <label htmlFor="name">Name:</label>
+                    <label htmlFor="accountName">Name:</label>
 
                     <input
-                        id="name"
-                        name="name"
-                        type="number"
+                        id="accountNname"
+                        name="accountName"
                         value={newAccount.type}
                         onChange={handleInputChange}
                         required
                     />
-                    <label htmlFor="type">Type:</label>
+                    <label htmlFor="accountType">Type:</label>
                     <select
-                        id="type"
-                        name="type"
+                        id="accountType"
+                        name="accountType"
                         value={newAccount.name}
                         onChange={handleInputChange}
                     >
@@ -96,25 +95,23 @@ const Account = () => {
                     </select>
 
 
-                    <label htmlFor="number">Number:</label>
+                    <label htmlFor="accountNumber">Number:</label>
                     <input
-                        id="number"
-                        name="number"
+                        id="accountNumber"
+                        name="accountNumber"
                         value={newAccount.number}
                         onChange={handleInputChange}
                         required
                     />
 
                     <label htmlFor="balance">Balance:</label>
-                    <select
+                    <input
                         id="balance"
                         name="balance"
                         value={newAccount.type}
+                        type="number"
                         onChange={handleInputChange}
-                    >
-                        <option value="income">Income</option>
-                        <option value="outcome">Outcome</option>
-                    </select>
+                    />
 
                     <button type="submit">Add Account</button>
                 </form>
