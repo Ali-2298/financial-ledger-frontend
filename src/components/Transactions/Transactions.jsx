@@ -16,17 +16,19 @@ const Transaction = () => {
         "Salary",
         "Commission",
         "Interest Income",
-        "Investment Earnings"
+        "Investment Earnings",
+        "Other"
     ];
 
-    const expenseCategories = [
+    const expenditureCategories = [
         "Rent Expense",
         "Electricity Bill",
         "Utilities Bill",
         "Internet Bill",
         "Petrol",
         "Groceries",
-        "Investments Purchase"
+        "Investments Purchase",
+        "Other"
     ];
 
     useEffect(() => {
@@ -100,7 +102,7 @@ const Transaction = () => {
                     >
                         <option value="">Select Type</option>
                         <option value="income">Income</option>
-                        <option value="expense">Expense</option>
+                        <option value="expenditure">Expenditure</option>
                     </select>
 
                     <label htmlFor="category">Category:</label>
@@ -119,8 +121,8 @@ const Transaction = () => {
                             ))
                         }
 
-                        {newTransaction.type === "expense" &&
-                            expenseCategories.map((item, i) => (
+                        {newTransaction.type === "expenditure" &&
+                            expenditureCategories.map((item, i) => (
                                 <option key={i} value={item}>{item}</option>
                             ))
                         }
