@@ -100,7 +100,7 @@ const Transaction = () => {
                         required
                     />
 
-                    <label htmlFor="account Type">Account Type:</label>
+                    <label htmlFor="account-type">Account Type:</label>
                     <select
                         id="account-type"
                         name="account-type"
