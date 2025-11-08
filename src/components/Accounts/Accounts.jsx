@@ -1,11 +1,9 @@
-import { useState, useEffect, useContext } from 'react';
-import { UserContext } from '../../contexts/UserContext';
+import { useState, useEffect } from 'react';
 
 const Account = () => {
-    const { user } = useContext(UserContext);
 
     const [accounts, setAccounts] = useState([]);
-    const [newAccount, setNewAccounts] = useState({
+    const [newAccount, setNewAccount] = useState({
         accountName: "",
         accountType: "",
         accountNumber: "",
@@ -29,12 +27,10 @@ const Account = () => {
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
-        setNewAccounts({ ...newAccount, [name]: value });
+        setNewAccount({ ...newAccount, [name]: value });
     };
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-
+    const handleSubmit = async () => {
         try {
             const response = await fetch('/api/accounts', {
                 method: 'POST',
@@ -50,13 +46,13 @@ const Account = () => {
             }
 
             if (!response.ok) {
-                console.error('Failed to save name:', data || response.statusText);
+                console.error('Failed to save account:', data || response.statusText);
                 return;
             }
 
-            setAccounts([...Accounts, newAccount]);
+            setAccounts([...accounts, data]);
 
-            setNewAccounts({
+            setNewAccount({
                 accountName: "",
                 accountType: "",
                 accountNumber: "",
@@ -67,39 +63,42 @@ const Account = () => {
         }
     };
 
+    const handleAccountClick = (accountId) => {
+        window.location.href = `/account/${accountId}`;
+    };
+
     return (
         <div className="dashboard">
             <div className="formDiv">
                 <h3>Add New Account</h3>
-                <form onSubmit={handleSubmit}>
-
+                <div>
                     <label htmlFor="accountName">Name:</label>
-
                     <input
-                        id="accountNname"
+                        id="accountName"
                         name="accountName"
-                        value={newAccount.type}
+                        value={newAccount.accountName}
                         onChange={handleInputChange}
                         required
                     />
+                    
                     <label htmlFor="accountType">Type:</label>
                     <select
                         id="accountType"
                         name="accountType"
-                        value={newAccount.name}
+                        value={newAccount.accountType}
                         onChange={handleInputChange}
                     >
+                        <option value="">Select Type</option>
                         <option value="check">Check</option>
                         <option value="savings">Savings</option>
                         <option value="salary">Salary</option>
                     </select>
 
-
                     <label htmlFor="accountNumber">Number:</label>
                     <input
                         id="accountNumber"
                         name="accountNumber"
-                        value={newAccount.number}
+                        value={newAccount.accountNumber}
                         onChange={handleInputChange}
                         required
                     />
@@ -108,13 +107,36 @@ const Account = () => {
                     <input
                         id="balance"
                         name="balance"
-                        value={newAccount.type}
+                        value={newAccount.balance}
                         type="number"
                         onChange={handleInputChange}
                     />
 
-                    <button type="submit">Add Account</button>
-                </form>
+                    <button type="button" onClick={handleSubmit}>Add Account</button>
+                </div>
+            </div>
+
+            <div className="accountsList">
+                <h3>My Accounts</h3>
+                {accounts.length === 0 ? (
+                    <p>No accounts yet.</p>
+                ) : (
+                    <div className="accounts-grid">
+                        {accounts.map((account) => (
+                            <div 
+                                key={account.id || account.accountNumber} 
+                                className="account-card"
+                                onClick={() => handleAccountClick(account.id)}
+                                style={{ cursor: 'pointer' }}
+                            >
+                                <h4>{account.accountName}</h4>
+                                <p className="balance">
+                                    ${parseFloat(account.balance).toFixed(2)}
+                                </p>
+                            </div>
+                        ))}
+                    </div>
+                )}
             </div>
         </div>
     );
