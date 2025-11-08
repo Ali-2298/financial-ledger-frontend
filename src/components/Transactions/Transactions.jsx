@@ -9,8 +9,25 @@ const Transaction = () => {
         category: "",
         amount: "",
         description: "",
-        type: "expense"
+        type: ""
     });
+
+    const incomeCategories = [
+        "Salary",
+        "Commission",
+        "Interest Income",
+        "Investment Earnings"
+    ];
+
+    const expenseCategories = [
+        "Rent Expense",
+        "Electricity Bill",
+        "Utilities Bill",
+        "Internet Bill",
+        "Petrol",
+        "Groceries",
+        "Investments Purchase"
+    ];
 
     useEffect(() => {
         const fetchTransactions = async () => {
@@ -60,7 +77,7 @@ const Transaction = () => {
                 description: "",
                 amount: "",
                 category: "",
-                type: "expense"
+                type: ""
             });
         } catch (err) {
             console.error('Submit error:', err);
@@ -68,18 +85,46 @@ const Transaction = () => {
     };
 
     return (
-        <div className="dashboard">
+        <div className="account">
             <div className="formDiv">
                 <h3>Add New Transaction</h3>
                 <form onSubmit={handleSubmit}>
 
+                    <label htmlFor="account-type">Account Type:</label>
+                    <select
+                        id="account-type"
+                        name="type"
+                        value={newTransaction.type}
+                        onChange={handleInputChange}
+                        required
+                    >
+                        <option value="">Select Type</option>
+                        <option value="income">Income</option>
+                        <option value="expense">Expense</option>
+                    </select>
+
                     <label htmlFor="category">Category:</label>
-                    <input
+                    <select
                         id="category"
                         name="category"
                         value={newTransaction.category}
                         onChange={handleInputChange}
-                    />
+                        required
+                    >
+                        <option value="">Select Category</option>
+
+                        {newTransaction.type === "income" &&
+                            incomeCategories.map((item, i) => (
+                                <option key={i} value={item}>{item}</option>
+                            ))
+                        }
+
+                        {newTransaction.type === "expense" &&
+                            expenseCategories.map((item, i) => (
+                                <option key={i} value={item}>{item}</option>
+                            ))
+                        }
+                    </select>
 
                     <label htmlFor="amount">Amount:</label>
                     <input
@@ -100,24 +145,12 @@ const Transaction = () => {
                         required
                     />
 
-                    <label htmlFor="account-type">Account Type:</label>
-                    <select
-                        id="account-type"
-                        name="account-type"
-                        value={newTransaction.type}
-                        onChange={handleInputChange}
-                    >
-                        <option value="income">Income</option>
-                        <option value="outcome">Outcome</option>
-                    </select>
-
-
-                    <label htmlFor="transaction-date" >Transaction Date:</label>
+                    <label htmlFor="transaction-date">Transaction Date:</label>
                     <input
                         id="transaction-date"
-                        name="transaction-date"
+                        name="transactionDate"
                         type="date"
-                        value={newTransaction.transactionDate}
+                        value={newTransaction.transactionDate || ""}
                         onChange={handleInputChange}
                         required
                     />
