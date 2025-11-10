@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 ```mermaid
 graph TD
     A["📘 Financial Ledger Dashboard<br/>GET /ledger<br/><br/>User sees:<br/>• Total Income vs Total Expenses summary<br/>• Recent transactions list<br/>• Filters (by date, type, category)<br/>• Button: Add New Transaction"]
