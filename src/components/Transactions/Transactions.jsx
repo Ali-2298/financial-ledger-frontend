@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
+import { getAllTransactions, createTransaction } from '../../services/transactionService';
 
-const BACKEND_URL = import.meta.env.VITE_BACK_END_SERVER_URL;
-
-const Transaction = () => {
+const Transactions = () => {
   const [transactions, setTransactions] = useState([]);
   const [newTransaction, setNewTransaction] = useState({
     type: "",
@@ -12,68 +11,65 @@ const Transaction = () => {
     transactionDate: ""
   });
 
-  const incomeCategories = ["Salary", "Commission", "Interest Income", "Investment Earnings", "Other"];
-  const expenditureCategories = ["Rent Expense", "Electricity Bill", "Utilities Bill", "Internet Bill", "Petrol", "Groceries", "Investments Purchase", "Other"];
+  const incomeCategories = [
+    "Salary",
+    "Commission",
+    "Interest Income",
+    "Investment Earnings",
+    "Other"
+  ];
 
-  // Fetch transactions
+  const expenditureCategories = [
+    "Rent Expense",
+    "Electricity Bill",
+    "Utilities Bill",
+    "Internet Bill",
+    "Petrol",
+    "Groceries",
+    "Investments Purchase",
+    "Other"
+  ];
+
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        const response = await fetch(`${BACKEND_URL}/api/transactions`);
-        if (!response.ok) throw new Error('Failed to fetch transactions');
-        const data = await response.json();
+        const data = await getAllTransactions();
         setTransactions(data);
       } catch (err) {
         console.error('Fetch error:', err);
       }
     };
-
     fetchTransactions();
   }, []);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
     setNewTransaction({ ...newTransaction, [name]: value });
   };
 
-  const handleSubmit = async () => {
-  try {
-    const response = await fetch(`${BACKEND_URL}/api/transactions`, {
-      method: 'POST',
-      headers: { 
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}` 
-      },
-      body: JSON.stringify(newTransaction)
-    });
-
-    const savedTransaction = await response.json();
-
-    if (!response.ok) {
-      console.error('Failed to save transaction:', savedTransaction || response.statusText);
-      return;
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      const savedTransaction = await createTransaction(newTransaction);
+      setTransactions([...transactions, savedTransaction]);
+      setNewTransaction({
+        type: "",
+        category: "",
+        amount: "",
+        description: "",
+        transactionDate: ""
+      });
+    } catch (err) {
+      console.error('Error creating transaction:', err);
     }
-
-    setTransactions([...transactions, savedTransaction]);
-
-    setNewTransaction({
-      type: "",
-      category: "",
-      amount: "",
-      description: "",
-      transactionDate: ""
-    });
-  } catch (err) {
-    console.error('Submit error:', err);
-  }
-};
+  };
 
   return (
     <div className="dashboard">
       <div className="formDiv">
         <h3>Add New Transaction</h3>
-        <div>
-          <label htmlFor="type">Type:</label>
+        <form onSubmit={handleSubmit}>
+          <label htmlFor="type">Transaction Type:</label>
           <select
             id="type"
             name="type"
@@ -96,9 +92,15 @@ const Transaction = () => {
           >
             <option value="">Select Category</option>
             {newTransaction.type === "income" &&
-              incomeCategories.map((cat, i) => <option key={i} value={cat}>{cat}</option>)}
+              incomeCategories.map((item, i) => (
+                <option key={i} value={item}>{item}</option>
+              ))
+            }
             {newTransaction.type === "expenditure" &&
-              expenditureCategories.map((cat, i) => <option key={i} value={cat}>{cat}</option>)}
+              expenditureCategories.map((item, i) => (
+                <option key={i} value={item}>{item}</option>
+              ))
+            }
           </select>
 
           <label htmlFor="amount">Amount:</label>
@@ -120,7 +122,7 @@ const Transaction = () => {
             required
           />
 
-          <label htmlFor="transactionDate">Date:</label>
+          <label htmlFor="transactionDate">Transaction Date:</label>
           <input
             id="transactionDate"
             name="transactionDate"
@@ -130,22 +132,23 @@ const Transaction = () => {
             required
           />
 
-          <button type="button" onClick={handleSubmit}>Add Transaction</button>
-        </div>
+          <button type="submit">Add Transaction</button>
+        </form>
       </div>
 
-      <div className="accountsList">
+      <div className="transactionsList">
         <h3>Recent Transactions</h3>
         {transactions.length === 0 ? (
-          <p>No transactions yet.</p>
+          <p>No transactions yet. Add your first transaction above!</p>
         ) : (
-          <div className="accounts-grid">
-            {transactions.map((t) => (
-              <div key={t._id} className="account-card">
+          <div className="transactions-grid">
+            {transactions.map((t, index) => (
+              <div key={index} className="transaction-card">
                 <h4>{t.description}</h4>
                 <p>
-                  {t.type === 'income' ? '+' : '-'}${t.amount} — {t.category} — {new Date(t.transactionDate).toLocaleDateString()}
+                  {t.type === 'income' ? '+' : '-'}${parseFloat(t.amount).toFixed(2)} — {t.category}
                 </p>
+                <p>Date: {new Date(t.transactionDate).toLocaleDateString()}</p>
               </div>
             ))}
           </div>
@@ -155,4 +158,4 @@ const Transaction = () => {
   );
 };
 
-export default Transaction;
+export default Transactions;
