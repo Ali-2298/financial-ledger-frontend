@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getAllTransactions, createTransaction } from '../../services/transactionService';
+import { getAllTransactions, createTransaction } from '../../services/transaction';
 
 const Transactions = () => {
   const [transactions, setTransactions] = useState([]);
