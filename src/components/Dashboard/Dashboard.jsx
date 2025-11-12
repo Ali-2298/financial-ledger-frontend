@@ -8,11 +8,15 @@ const Dashboard = () => {
   const { user } = useContext(UserContext);
 
   const [transactions, setTransactions] = useState([]);
+  const [budgetReport, setBudgetReport] = useState(null);  // New state for budget report
+  const [budgetId] = useState('YOUR_BUDGET_ID');  // Placeholder; make dynamic later (e.g., from user selection)
+
   const [newTransaction, setNewTransaction] = useState({
     category: "",
     amount: "",
     description: "",
-    type: "expense"
+    type: "expense",
+    transactionDate: ""  // Added missing field
   });
 
   useEffect(() => {
@@ -27,8 +31,20 @@ const Dashboard = () => {
       }
     };
 
+    const fetchBudgetReport = async () => {
+      try {
+        const response = await fetch(`/api/budgets/${budgetId}/report`);
+        if (!response.ok) throw new Error('Failed to fetch budget report');
+        const data = await response.json();
+        setBudgetReport(data);
+      } catch (err) {
+        console.error('Failed to load budget report:', err);
+      }
+    };
+
     fetchTransactions();
-  }, []);
+    fetchBudgetReport();  // Fetch budget report alongside transactions
+  }, [budgetId]);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -63,7 +79,8 @@ const Dashboard = () => {
         description: "",
         amount: "",
         category: "",
-        type: "expense"
+        type: "expense",
+        transactionDate: ""  // Reset added field
       });
     } catch (err) {
       console.error('Submit error:', err);
@@ -75,7 +92,6 @@ const Dashboard = () => {
       <div className="formDiv">
         <h3>Add New Transaction</h3>
         <form onSubmit={handleSubmit}>
-
           <label htmlFor="category">Category:</label>
           <input
             id="category"
@@ -103,22 +119,21 @@ const Dashboard = () => {
             required
           />
 
-          <label htmlFor="account Type">Account Type:</label>
+          <label htmlFor="type">Type:</label>
           <select
-            id="account-type"
-            name="account-type"
+            id="type"
+            name="type"
             value={newTransaction.type}
             onChange={handleInputChange}
           >
             <option value="income">Income</option>
-            <option value="outcome">Outcome</option>
+            <option value="expense">Expense</option>  // Fixed to match backend
           </select>
 
-
-          <label htmlFor="transaction-date" >Transaction Date:</label>
+          <label htmlFor="transactionDate">Transaction Date:</label>
           <input
-            id="transaction-date"
-            name="transaction-date"
+            id="transactionDate"
+            name="transactionDate"
             type="date"
             value={newTransaction.transactionDate}
             onChange={handleInputChange}
@@ -129,6 +144,7 @@ const Dashboard = () => {
         </form>
       </div>
 
+      {/* Existing Transaction List */}
       <div className="transactionList">
         <h3>Recent Transactions</h3>
         {transactions.length === 0 ? (
@@ -142,6 +158,35 @@ const Dashboard = () => {
               </p>
             </div>
           ))
+        )}
+      </div>
+
+      {/* New Budget Report Section */}
+      <div className="budgetReport">
+        <h3>Budget Report</h3>
+        {budgetReport ? (
+          <>
+            <p><strong>Budget:</strong> {budgetReport.budget.name}</p>
+            <p><strong>Period:</strong> {new Date(budgetReport.budget.startDate).toLocaleDateString()} - {new Date(budgetReport.budget.endDate).toLocaleDateString()}</p>
+            <p><strong>Total Spent:</strong> {budgetReport.totalSpent.toFixed(2)} {budgetReport.budget.currency}</p>
+
+            <h4>Spending by Account</h4>
+            {Object.entries(budgetReport.spentByAccount).map(([accountName, accountData]) => (
+              <div key={accountName} style={{ marginBottom: '20px' }}>
+                <h5>{accountName}: {accountData.total.toFixed(2)} {budgetReport.budget.currency}</h5>
+                <ul>
+                  {Object.entries(accountData.categories).map(([categoryName, categoryData]) => (
+                    <li key={categoryName}>
+                      {categoryName}: {categoryData.total.toFixed(2)} {budgetReport.budget.currency}
+                      {categoryData.alertTriggered && <span style={{ color: 'red', marginLeft: '10px' }}>Alert!</span>}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </>
+        ) : (
+          <p>Loading budget report...</p>
         )}
       </div>
     </div>
