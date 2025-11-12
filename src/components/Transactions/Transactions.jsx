@@ -10,7 +10,7 @@ const Transactions = () => {
     description: "",
     transactionDate: ""
   });
-  const [editId, setEditId] = useState(null); // added
+  const [editId, setEditId] = useState(null);
 
   const incomeCategories = [
     "Salary",
@@ -59,7 +59,6 @@ const Transactions = () => {
         const savedTransaction = await createTransaction(newTransaction);
         setTransactions([...transactions, savedTransaction]);
       }
-
       setNewTransaction({
         type: "",
         category: "",
@@ -68,7 +67,8 @@ const Transactions = () => {
         transactionDate: ""
       });
     } catch (err) {
-      console.error('Error creating transaction:', err);
+      console.error('Error creating/updating transaction:', err);
+      alert(err.message);
     }
   };
 
@@ -83,78 +83,91 @@ const Transactions = () => {
     setEditId(transaction._id);
   };
 
+  const handleCancelEdit = () => {
+    setEditId(null);
+    setNewTransaction({
+      type: "",
+      category: "",
+      amount: "",
+      description: "",
+      transactionDate: ""
+    });
+  };
+
   return (
     <div className="dashboard">
       <div className="formDiv">
-        <h3>{editId ? "Edit Transaction" : "Add New Transaction"}</h3>
-        <form onSubmit={handleSubmit}>
-          <label htmlFor="type">Transaction Type:</label>
-          <select
-            id="type"
-            name="type"
-            value={newTransaction.type}
-            onChange={handleInputChange}
-            required
-          >
-            <option value="">Select Type</option>
-            <option value="income">Income</option>
-            <option value="expenditure">Expenditure</option>
-          </select>
+        <h3>{!editId ? "Add New Transaction" : "Edit Transaction"}</h3>
+        {!editId && (
+          <form onSubmit={handleSubmit}>
+            <label htmlFor="type">Transaction Type:</label>
+            <select
+              id="type"
+              name="type"
+              value={newTransaction.type}
+              onChange={handleInputChange}
+              required
+            >
+              <option value="">Select Type</option>
+              <option value="income">Income</option>
+              <option value="expenditure">Expenditure</option>
+            </select>
 
-          <label htmlFor="category">Category:</label>
-          <select
-            id="category"
-            name="category"
-            value={newTransaction.category}
-            onChange={handleInputChange}
-            required
-          >
-            <option value="">Select Category</option>
-            {newTransaction.type === "income" &&
-              incomeCategories.map((item, i) => (
-                <option key={i} value={item}>{item}</option>
-              ))
-            }
-            {newTransaction.type === "expenditure" &&
-              expenditureCategories.map((item, i) => (
-                <option key={i} value={item}>{item}</option>
-              ))
-            }
-          </select>
+            <label htmlFor="category">Category:</label>
+            <select
+              id="category"
+              name="category"
+              value={newTransaction.category}
+              onChange={handleInputChange}
+              required
+            >
+              <option value="">Select Category</option>
+              {newTransaction.type === "income" &&
+                incomeCategories.map((item, i) => (
+                  <option key={i} value={item}>{item}</option>
+                ))
+              }
+              {newTransaction.type === "expenditure" &&
+                expenditureCategories.map((item, i) => (
+                  <option key={i} value={item}>{item}</option>
+                ))
+              }
+            </select>
 
-          <label htmlFor="amount">Amount:</label>
-          <input
-            id="amount"
-            name="amount"
-            type="number"
-            value={newTransaction.amount}
-            onChange={handleInputChange}
-            required
-          />
+            <label htmlFor="amount">Amount:</label>
+            <input
+              id="amount"
+              name="amount"
+              type="number"
+              value={newTransaction.amount}
+              onChange={handleInputChange}
+              required
+            />
 
-          <label htmlFor="description">Description:</label>
-          <input
-            id="description"
-            name="description"
-            value={newTransaction.description}
-            onChange={handleInputChange}
-            required
-          />
+            <label htmlFor="description">Description:</label>
+            <input
+              id="description"
+              name="description"
+              value={newTransaction.description}
+              onChange={handleInputChange}
+              required
+            />
 
-          <label htmlFor="transactionDate">Transaction Date:</label>
-          <input
-            id="transactionDate"
-            name="transactionDate"
-            type="date"
-            value={newTransaction.transactionDate}
-            onChange={handleInputChange}
-            required
-          />
+            <label htmlFor="transactionDate">Transaction Date:</label>
+            <input
+              id="transactionDate"
+              name="transactionDate"
+              type="date"
+              value={newTransaction.transactionDate}
+              onChange={handleInputChange}
+              required
+            />
 
-          <button type="submit">
-            {editId ? "Update Transaction" : "Add Transaction"}
-          </button>
-        </form>
+            <button type="submit">
+              Add Transaction
+            </button>
+          </form>
+        )}
       </div>
 
       <div className="transactionsList">
@@ -165,12 +178,84 @@ const Transactions = () => {
           <div className="transactions-grid">
             {transactions.map((t, index) => (
               <div key={index} className="transaction-card">
-                <h4>{t.description}</h4>
-                <p>
-                  {t.type === 'income' ? '+' : '-'}${parseFloat(t.amount).toFixed(2)} — {t.category}
-                </p>
-                <p>Date: {new Date(t.transactionDate).toLocaleDateString()}</p>
-                <button onClick={() => handleEdit(t)}>Edit</button>
+                {editId === t._id ? (
+                  <form onSubmit={handleSubmit}>
+                    <label htmlFor="typeEdit">Transaction Type:</label>
+                    <select
+                      id="typeEdit"
+                      name="type"
+                      value={newTransaction.type}
+                      onChange={handleInputChange}
+                      required
+                    >
+                      <option value="">Select Type</option>
+                      <option value="income">Income</option>
+                      <option value="expenditure">Expenditure</option>
+                    </select>
+
+                    <label htmlFor="categoryEdit">Category:</label>
+                    <select
+                      id="categoryEdit"
+                      name="category"
+                      value={newTransaction.category}
+                      onChange={handleInputChange}
+                      required
+                    >
+                      <option value="">Select Category</option>
+                      {newTransaction.type === "income" &&
+                        incomeCategories.map((item, i) => (
+                          <option key={i} value={item}>{item}</option>
+                        ))
+                      }
+                      {newTransaction.type === "expenditure" &&
+                        expenditureCategories.map((item, i) => (
+                          <option key={i} value={item}>{item}</option>
+                        ))
+                      }
+                    </select>
+
+                    <label htmlFor="amountEdit">Amount:</label>
+                    <input
+                      id="amountEdit"
+                      name="amount"
+                      type="number"
+                      value={newTransaction.amount}
+                      onChange={handleInputChange}
+                      required
+                    />
+
+                    <label htmlFor="descriptionEdit">Description:</label>
+                    <input
+                      id="descriptionEdit"
+                      name="description"
+                      value={newTransaction.description}
+                      onChange={handleInputChange}
+                      required
+                    />
+
+                    <label htmlFor="transactionDateEdit">Transaction Date:</label>
+                    <input
+                      id="transactionDateEdit"
+                      name="transactionDate"
+                      type="date"
+                      value={newTransaction.transactionDate}
+                      onChange={handleInputChange}
+                      required
+                    />
+
+                    <button type="submit">Update Transaction</button>
+                    <button type="button" onClick={handleCancelEdit}>Cancel</button>
+                  </form>
+                ) : (
+                  <>
+                    <h4>{t.description}</h4>
+                    <p>
+                      {t.type === 'income' ? '+' : '-'}${parseFloat(t.amount).toFixed(2)} — {t.category}
+                    </p>
+                    <p>Date: {new Date(t.transactionDate).toLocaleDateString()}</p>
+                    <button onClick={() => handleEdit(t)}>Edit</button>
+                  </>
+                )}
               </div>
             ))}
           </div>
