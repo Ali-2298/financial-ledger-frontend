@@ -64,8 +64,24 @@ const updateTransaction = async (transactionId, updatedData) => {
   return await res.json();
 };
 
+const deleteTransaction = async (transactionId, userId) => {
+  const res = await fetch(`${BASE_URL}/${transactionId}?userId=${userId}`, {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json' }
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json();
+    throw new Error(errorData.error || 'Failed to delete transaction');
+  }
+
+  return await res.json();
+};
+
+
 export {
   getAllTransactions,
   createTransaction,
-  updateTransaction
+  updateTransaction,
+  deleteTransaction
 };
