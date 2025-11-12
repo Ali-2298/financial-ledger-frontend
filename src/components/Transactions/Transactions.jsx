@@ -72,7 +72,6 @@ const Transactions = () => {
     }
   };
 
-  // added edit function
   const handleEdit = (transaction) => {
     setNewTransaction({
       type: transaction.type,

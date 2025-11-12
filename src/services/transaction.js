@@ -44,8 +44,13 @@ const createTransaction = async (transactionData) => {
 };
 
 const updateTransaction = async (transactionId, updatedData) => {
-  const res = await axios.put(`${BASE_URL}/${transactionId}`, updatedData);
-  return res.data;
+  const res = await fetch(`${BASE_URL}/${transactionId}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(updatedData)
+  });
+  if (!res.ok) throw new Error('Failed to update transaction');
+  return await res.json();
 };
 
 export {
