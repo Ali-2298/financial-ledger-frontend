@@ -43,7 +43,13 @@ const createTransaction = async (transactionData) => {
   }
 };
 
+const updateTransaction = async (transactionId, updatedData) => {
+  const res = await axios.put(`${BASE_URL}/${transactionId}`, updatedData);
+  return res.data;
+};
+
 export {
   getAllTransactions,
-  createTransaction
+  createTransaction,
+  updateTransaction
 };

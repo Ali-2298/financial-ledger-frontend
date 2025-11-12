@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getAllTransactions, createTransaction } from '../../services/transaction';
+import { getAllTransactions, createTransaction, updateTransaction } from '../../services/transaction';
 
 const Transactions = () => {
   const [transactions, setTransactions] = useState([]);
@@ -10,6 +10,7 @@ const Transactions = () => {
     description: "",
     transactionDate: ""
   });
+  const [editId, setEditId] = useState(null); // added
 
   const incomeCategories = [
     "Salary",
@@ -50,8 +51,15 @@ const Transactions = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const savedTransaction = await createTransaction(newTransaction);
-      setTransactions([...transactions, savedTransaction]);
+      if (editId) {
+        const updated = await updateTransaction(editId, newTransaction);
+        setTransactions(transactions.map(t => t._id === editId ? updated : t));
+        setEditId(null);
+      } else {
+        const savedTransaction = await createTransaction(newTransaction);
+        setTransactions([...transactions, savedTransaction]);
+      }
+
       setNewTransaction({
         type: "",
         category: "",
@@ -64,10 +72,22 @@ const Transactions = () => {
     }
   };
 
+  // added edit function
+  const handleEdit = (transaction) => {
+    setNewTransaction({
+      type: transaction.type,
+      category: transaction.category,
+      amount: transaction.amount,
+      description: transaction.description,
+      transactionDate: transaction.transactionDate.split('T')[0]
+    });
+    setEditId(transaction._id);
+  };
+
   return (
     <div className="dashboard">
       <div className="formDiv">
-        <h3>Add New Transaction</h3>
+        <h3>{editId ? "Edit Transaction" : "Add New Transaction"}</h3>
         <form onSubmit={handleSubmit}>
           <label htmlFor="type">Transaction Type:</label>
           <select
@@ -132,7 +152,9 @@ const Transactions = () => {
             required
           />
 
-          <button type="submit">Add Transaction</button>
+          <button type="submit">
+            {editId ? "Update Transaction" : "Add Transaction"}
+          </button>
         </form>
       </div>
 
@@ -149,6 +171,7 @@ const Transactions = () => {
                   {t.type === 'income' ? '+' : '-'}${parseFloat(t.amount).toFixed(2)} — {t.category}
                 </p>
                 <p>Date: {new Date(t.transactionDate).toLocaleDateString()}</p>
+                <button onClick={() => handleEdit(t)}>Edit</button>
               </div>
             ))}
           </div>
