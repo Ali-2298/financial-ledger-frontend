@@ -144,7 +144,7 @@ const Dashboard = () => {
         </form>
       </div>
 
-      {/* Existing Transaction List */}
+     
       <div className="transactionList">
         <h3>Recent Transactions</h3>
         {transactions.length === 0 ? (
