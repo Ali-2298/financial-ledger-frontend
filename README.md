@@ -1,7 +1,8 @@
-<<<<<<< HEAD
-=======
+# CASHLY - Wireframes
+
 ```mermaid
 graph TD
+    %% Pages / Components
     A["📘 Financial Ledger Dashboard<br/>GET /ledger<br/><br/>User sees:<br/>• Total Income vs Total Expenses summary<br/>• Recent transactions list<br/>• Filters (by date, type, category)<br/>• Button: Add New Transaction"]
 
     B["📄 Transaction Details Page (Optional)<br/>GET /transactions/:id<br/><br/>User sees:<br/>• Type (Income or Expense)<br/>• Category<br/>• Amount<br/>• Description<br/>• Transaction Date<br/>• Edit / Delete buttons"]
@@ -37,4 +38,3 @@ graph TD
     class A,B primaryPage
     class E,F formPage
     class I deletePage
->>>>>>> 0a3b2852d4342a1d0039328c296774465d0c608b
