@@ -12,7 +12,6 @@ const getAllTransactions = async () => {
     if (!res.ok) {
       throw new Error('Failed to fetch transactions');
     }
-
     return await res.json();
   } catch (err) {
     console.error(err);
@@ -35,7 +34,6 @@ const createTransaction = async (transactionData) => {
       const errData = await res.json();
       throw new Error(errData.message || 'Failed to create transaction');
     }
-
     return await res.json();
   } catch (err) {
     console.error(err);
@@ -43,7 +41,47 @@ const createTransaction = async (transactionData) => {
   }
 };
 
+const updateTransaction = async (transactionId, updatedData) => {
+  const res = await fetch(`${BASE_URL}/${transactionId}`, {
+    method: 'PUT',
+    headers: {
+      'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      type: updatedData.type,
+      category: updatedData.category,
+      amount: updatedData.amount,
+      description: updatedData.description,
+      transactionDate: updatedData.transactionDate,
+    })
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json();
+    throw new Error(errorData.error || 'Failed to update transaction');
+  }
+  return await res.json();
+};
+
+const deleteTransaction = async (transactionId, userId) => {
+  const res = await fetch(`${BASE_URL}/${transactionId}?userId=${userId}`, {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json' }
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json();
+    throw new Error(errorData.error || 'Failed to delete transaction');
+  }
+
+  return await res.json();
+};
+
+
 export {
   getAllTransactions,
-  createTransaction
+  createTransaction,
+  updateTransaction,
+  deleteTransaction
 };
