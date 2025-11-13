@@ -71,8 +71,8 @@ const Account = () => {
     };
 
     const handleAccountClick = (accountId) => {
-        window.location.href = `/account/${accountId}`;
-    };
+    window.location.href = `/account/${accountId}`;
+};
 
     return (
         <div className="dashboard">
@@ -133,11 +133,11 @@ const Account = () => {
                     <div className="accounts-grid">
                         {accounts.map((account) => (
                             <div 
-                                key={account.id || account.accountNumber} 
+                                key={account._id || account.accountNumber} 
                                 className="account-card"
-                                onClick={() => handleAccountClick(account.id)}
+                                onClick={() => handleAccountClick(account._id)}
                                 style={{ cursor: 'pointer' }}
-                            >
+                                >
                                 <h4>{account.accountName}</h4>
                                 <p className="balance">
                                     ${parseFloat(account.balance).toFixed(2)}
@@ -150,5 +150,4 @@ const Account = () => {
         </div>
     );
 };
-
 export default Account;
