@@ -45,7 +45,7 @@ const Dashboard = () => {
         const data = await response.json();
         setBudgetReport(data);
       } catch (err) {
-        console.error('Failed to load budget report:', err);
+        console.error(err);
       }
     };
 

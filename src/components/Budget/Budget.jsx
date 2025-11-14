@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const budget= () => {
+const Budget= () => {
   const [budgetReport, setBudgetReport] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -15,7 +15,7 @@ const budget= () => {
         const response = await fetch(`/api/budgets/${budgetId}/report`);
         if (!response.ok) throw new Error('Failed to fetch budget report');
         const data = await response.json();
-        setBudget(data);
+        setBudgetReport(data);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -30,9 +30,9 @@ const budget= () => {
   
   if (loading) return <p>Loading budget report...</p>;
   if (error) return <p style={{ color: 'red' }}>Error: {error}</p>;
-  if (!budget) return <p>No budget data available.</p>;
+  if (!budgetId) return <p>No budget data available.</p>;
 
-  const { budget: budgetInfo, totalSpent, spentByAccount } = budget;
+  const { budget: budgetInfo, totalSpent, spentByAccount } = budgetReport;
 
   return (
     <div className="budgetReport">
@@ -63,4 +63,4 @@ const budget= () => {
   );
 };
 
-export default budget;
+export default Budget;
