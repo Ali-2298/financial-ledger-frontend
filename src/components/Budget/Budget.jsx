@@ -1,6 +1,6 @@
     import React, { useState, useEffect } from 'react';
 
-const Budget= () => {
+const budget= () => {
   const [budgetReport, setBudgetReport] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -68,4 +68,4 @@ const Budget= () => {
   );
 };
 
-export default Budget;
+export default budget;
