@@ -10,8 +10,10 @@ import Landing from './components/Landing/Landing';
 import Dashboard from './components/Dashboard/Dashboard';
 import Transaction from './components/Transactions/Transactions';
 import Account from './components/Accounts/Accounts';
+import Budget from './components/Budget/Budget';
 import { useContext } from 'react';
 import { UserContext } from './contexts/UserContext';
+import AccountDetail from './components/Accounts/AccountDetail';
 
 const App = () => {
   const { user } = useContext(UserContext);
@@ -31,6 +33,8 @@ const App = () => {
             <Route path='/orders' element={<h1>ORDERS</h1>}/>
             <Route path='/transaction' element={<Transaction/>}/>
             <Route path='/account' element={<Account/>}/>
+            <Route path='/account/:accountId' element={<AccountDetail/>}/>
+            <Route path='/budget' element={<Budget/>}/>
           </>
             :
             <Route path='/' element={<Landing/>}/>
