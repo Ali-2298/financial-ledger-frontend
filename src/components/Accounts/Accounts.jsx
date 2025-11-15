@@ -13,7 +13,11 @@ const Account = () => {
     useEffect(() => {
         const fetchAccounts = async () => {
             try {
-                const response = await fetch('/api/accounts');
+                const response = await fetch('http://localhost:3000/api/accounts', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
                 if (!response.ok) throw new Error('Failed to fetch accounts');
                 const data = await response.json();
                 setAccounts(data);
@@ -32,9 +36,12 @@ const Account = () => {
 
     const handleSubmit = async () => {
         try {
-            const response = await fetch('/api/accounts', {
+            const response = await fetch('http://localhost:3000/api/accounts', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
                 body: JSON.stringify(newAccount)
             });
 
@@ -64,8 +71,8 @@ const Account = () => {
     };
 
     const handleAccountClick = (accountId) => {
-        window.location.href = `/account/${accountId}`;
-    };
+    window.location.href = `/account/${accountId}`;
+};
 
     return (
         <div className="dashboard">
@@ -87,6 +94,7 @@ const Account = () => {
                         name="accountType"
                         value={newAccount.accountType}
                         onChange={handleInputChange}
+                        required
                     >
                         <option value="">Select Type</option>
                         <option value="check">Check</option>
@@ -110,6 +118,7 @@ const Account = () => {
                         value={newAccount.balance}
                         type="number"
                         onChange={handleInputChange}
+                        required
                     />
 
                     <button type="button" onClick={handleSubmit}>Add Account</button>
@@ -119,16 +128,16 @@ const Account = () => {
             <div className="accountsList">
                 <h3>My Accounts</h3>
                 {accounts.length === 0 ? (
-                    <p>No accounts yet.</p>
+                    <p>No accounts yet. Add your first account above!</p>
                 ) : (
                     <div className="accounts-grid">
                         {accounts.map((account) => (
                             <div 
-                                key={account.id || account.accountNumber} 
+                                key={account._id || account.accountNumber} 
                                 className="account-card"
-                                onClick={() => handleAccountClick(account.id)}
+                                onClick={() => handleAccountClick(account._id)}
                                 style={{ cursor: 'pointer' }}
-                            >
+                                >
                                 <h4>{account.accountName}</h4>
                                 <p className="balance">
                                     ${parseFloat(account.balance).toFixed(2)}
@@ -141,5 +150,4 @@ const Account = () => {
         </div>
     );
 };
-
 export default Account;

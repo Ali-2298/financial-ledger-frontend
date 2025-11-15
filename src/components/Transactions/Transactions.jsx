@@ -1,183 +1,174 @@
-import { useState, useEffect, useContext } from 'react';
-import { UserContext } from '../../contexts/UserContext';
+import { useState, useEffect } from 'react';
+import { getAllTransactions, createTransaction, updateTransaction, deleteTransaction } from '../../services/transaction';
+import { getAllAccounts } from '../../services/accounts';
 
-const Transaction = () => {
-    const { user } = useContext(UserContext);
+const Transactions = () => {
+  const [transactions, setTransactions] = useState([]);
+  const [accounts, setAccounts] = useState([]);
+  const [newTransaction, setNewTransaction] = useState({
+    type: "",
+    category: "",
+    amount: "",
+    description: "",
+    transactionDate: "",
+    accountId: ""
+  });
+  const [editId, setEditId] = useState(null);
 
-    const [transactions, setTransactions] = useState([]);
-    const [newTransaction, setNewTransaction] = useState({
-        category: "",
-        amount: "",
-        description: "",
-        type: ""
+  const incomeCategories = ["Salary","Commission","Interest Income","Investment Earnings","Other"];
+  const expenditureCategories = ["Rent Expense","Electricity Bill","Utilities Bill","Internet Bill","Petrol","Groceries","Investments Purchase","Other"];
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const tx = await getAllTransactions();
+        const acc = await getAllAccounts();
+        console.log("Fetched accounts:", acc); 
+        setTransactions(tx);
+        setAccounts(acc);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    if (name === "type") {
+      setNewTransaction({ ...newTransaction, type: value, category: "" });
+    } else {
+      setNewTransaction({ ...newTransaction, [name]: value });
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (editId) {
+        const updated = await updateTransaction(editId, newTransaction);
+        setTransactions(transactions.map(t => t._id === editId ? updated : t));
+        setEditId(null);
+      } else {
+        const saved = await createTransaction(newTransaction);
+        setTransactions([...transactions, saved]);
+      }
+      setNewTransaction({ type: "", category: "", amount: "", description: "", transactionDate: "", accountId: "" });
+    } catch (err) {
+      console.error(err);
+      alert(err.message);
+    }
+  };
+
+  const handleEdit = (t) => {
+    setNewTransaction({
+      type: t.type,
+      category: t.category,
+      amount: t.amount,
+      description: t.description,
+      transactionDate: t.transactionDate.split('T')[0],
+      accountId: t.account?._id || ""
     });
+    setEditId(t._id);
+  };
 
-    const incomeCategories = [
-        "Salary",
-        "Commission",
-        "Interest Income",
-        "Investment Earnings",
-        "Other"
-    ];
+  const handleCancel = () => {
+    setEditId(null);
+    setNewTransaction({ type: "", category: "", amount: "", description: "", transactionDate: "", accountId: "" });
+  };
 
-    const expenditureCategories = [
-        "Rent Expense",
-        "Electricity Bill",
-        "Utilities Bill",
-        "Internet Bill",
-        "Petrol",
-        "Groceries",
-        "Investments Purchase",
-        "Other"
-    ];
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this transaction?")) return;
+    try {
+      await deleteTransaction(id);
+      setTransactions(transactions.filter(t => t._id !== id));
+    } catch (err) {
+      console.error(err);
+      alert(err.message);
+    }
+  };
 
-    useEffect(() => {
-        const fetchTransactions = async () => {
-            try {
-                const response = await fetch('/api/transactions');
-                if (!response.ok) throw new Error('Failed to fetch transactions');
-                const data = await response.json();
-                setTransactions(data);
-            } catch (err) {
-                console.error(err);
-            }
-        };
+  const displayedCategories = newTransaction.type === "income"
+    ? incomeCategories
+    : newTransaction.type === "expenditure"
+      ? expenditureCategories
+      : [];
 
-        fetchTransactions();
-    }, []);
+  return (
+    <div className="dashboard">
+      <div className="formDiv">
+        <h3>{editId ? "Edit Transaction" : "Add New Transaction"}</h3>
+        <form onSubmit={handleSubmit}>
+          <label>Type:</label>
+          <select name="type" value={newTransaction.type} onChange={handleInputChange} required>
+            <option value="">Select Type</option>
+            <option value="income">Income</option>
+            <option value="expenditure">Expenditure</option>
+          </select>
 
-    const handleInputChange = (event) => {
-        const { name, value } = event.target;
-        setNewTransaction({ ...newTransaction, [name]: value });
-    };
+          <label>Category:</label>
+          <select
+            name="category"
+            value={newTransaction.category}
+            onChange={handleInputChange}
+            required
+            disabled={!newTransaction.type}
+          >
+            <option value="">{newTransaction.type ? "Select Category" : "Select Type first"}</option>
+            {displayedCategories.map((c, i) => (
+              <option key={i} value={c}>{c}</option>
+            ))}
+          </select>
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
+          <label>Account:</label>
+          <select
+            name="accountId"
+            value={newTransaction.accountId}
+            onChange={handleInputChange}
+            required
+          >
+            <option value="">Select Account</option>
+            {accounts.map(acc => (
+              <option key={acc._id} value={acc._id}>
+                {acc.accountName || "Unnamed Account"}
+              </option>
+            ))}
+          </select>
 
-        try {
-            const response = await fetch('/api/transactions', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(newTransaction)
-            });
+          <label>Amount:</label>
+          <input type="number" name="amount" value={newTransaction.amount} onChange={handleInputChange} required />
 
-            let data = null;
-            try {
-                data = await response.json();
-            } catch {
-                console.warn('Server returned no JSON.');
-            }
+          <label>Description:</label>
+          <input type="text" name="description" value={newTransaction.description} onChange={handleInputChange} required />
 
-            if (!response.ok) {
-                console.error('Failed to save transaction:', data || response.statusText);
-                return;
-            }
+          <label>Date:</label>
+          <input type="date" name="transactionDate" value={newTransaction.transactionDate} onChange={handleInputChange} required />
 
-            setTransactions([...transactions, newTransaction]);
+          <button type="submit">{editId ? "Update" : "Add"}</button>
+          {editId && <button type="button" onClick={handleCancel}>Cancel</button>}
+        </form>
+      </div>
 
-            setNewTransaction({
-                description: "",
-                amount: "",
-                category: "",
-                type: ""
-            });
-        } catch (err) {
-            console.error('Submit error:', err);
-        }
-    };
-
-    return (
-        <div className="account">
-            <div className="formDiv">
-                <h3>Add New Transaction</h3>
-                <form onSubmit={handleSubmit}>
-
-                    <label htmlFor="account-type">Account Type:</label>
-                    <select
-                        id="account-type"
-                        name="type"
-                        value={newTransaction.type}
-                        onChange={handleInputChange}
-                        required
-                    >
-                        <option value="">Select Type</option>
-                        <option value="income">Income</option>
-                        <option value="expenditure">Expenditure</option>
-                    </select>
-
-                    <label htmlFor="category">Category:</label>
-                    <select
-                        id="category"
-                        name="category"
-                        value={newTransaction.category}
-                        onChange={handleInputChange}
-                        required
-                    >
-                        <option value="">Select Category</option>
-
-                        {newTransaction.type === "income" &&
-                            incomeCategories.map((item, i) => (
-                                <option key={i} value={item}>{item}</option>
-                            ))
-                        }
-
-                        {newTransaction.type === "expenditure" &&
-                            expenditureCategories.map((item, i) => (
-                                <option key={i} value={item}>{item}</option>
-                            ))
-                        }
-                    </select>
-
-                    <label htmlFor="amount">Amount:</label>
-                    <input
-                        id="amount"
-                        name="amount"
-                        type="number"
-                        value={newTransaction.amount}
-                        onChange={handleInputChange}
-                        required
-                    />
-
-                    <label htmlFor="description">Description:</label>
-                    <input
-                        id="description"
-                        name="description"
-                        value={newTransaction.description}
-                        onChange={handleInputChange}
-                        required
-                    />
-
-                    <label htmlFor="transaction-date">Transaction Date:</label>
-                    <input
-                        id="transaction-date"
-                        name="transactionDate"
-                        type="date"
-                        value={newTransaction.transactionDate || ""}
-                        onChange={handleInputChange}
-                        required
-                    />
-
-                    <button type="submit">Add Transaction</button>
-                </form>
+      <div className="transactionsList">
+        <h3>Recent Transactions</h3>
+        {transactions.length === 0 ? (
+          <p>No transactions yet!</p>
+        ) : (
+          transactions.map(t => (
+            <div key={t._id} className="transaction-card">
+              <p><strong>Type:</strong> {t.type}</p>
+              <p><strong>Category:</strong> {t.category}</p>
+              <p><strong>Account:</strong> {t.account?.accountName || "Unnamed Account"}</p>
+              <p><strong>Date:</strong> {new Date(t.transactionDate).toLocaleDateString()}</p>
+              <p><strong>Description:</strong> {t.description}</p>
+              <button onClick={() => handleEdit(t)}>Edit</button>
+              <button onClick={() => handleDelete(t._id)}>Delete</button>
             </div>
-
-            <div className="transactionList">
-                <h3>Recent Transactions</h3>
-                {transactions.length === 0 ? (
-                    <p>No transactions yet.</p>
-                ) : (
-                    transactions.map((t, index) => (
-                        <div key={index} className="transactionCard">
-                            <h4>{t.description}</h4>
-                            <p>
-                                {t.type === 'income' ? '+' : '-'}${t.amount} — {t.category}
-                            </p>
-                        </div>
-                    ))
-                )}
-            </div>
-        </div>
-    );
+          ))
+        )}
+      </div>
+    </div>
+  );
 };
 
-export default Transaction;
+export default Transactions;
