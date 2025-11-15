@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router'
 import { getAllTransactions } from '../../services/transaction';
+import Transactions from '../Transactions/Transactions';
 
 const Account = () => {
 
@@ -11,6 +13,8 @@ const Account = () => {
         accountNumber: "",
         balance: ""
     });
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -45,7 +49,7 @@ const Account = () => {
         try {
             const response = await fetch('http://localhost:3000/api/accounts', {
                 method: 'POST',
-                headers: { 
+                headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 },
@@ -99,11 +103,11 @@ const Account = () => {
             .filter(t => t.type === 'expenditure')
             .reduce((sum, t) => sum + parseFloat(t.amount || 0), 0);
     };
-const getCalculatedBalance = (accountId, initialBalance) => {
-    const income = getAccountIncome(accountId);
-    const expenditure = getAccountExpenditure(accountId);
-    return parseFloat(initialBalance) + income - expenditure;
-};
+    const getCalculatedBalance = (accountId, initialBalance) => {
+        const income = getAccountIncome(accountId);
+        const expenditure = getAccountExpenditure(accountId);
+        return parseFloat(initialBalance) + income - expenditure;
+    };
 
 
     return (
@@ -119,7 +123,7 @@ const getCalculatedBalance = (accountId, initialBalance) => {
                         onChange={handleInputChange}
                         required
                     />
-                    
+
                     <label htmlFor="accountType">Type:</label>
                     <select
                         id="accountType"
@@ -157,7 +161,7 @@ const getCalculatedBalance = (accountId, initialBalance) => {
                 </div>
             </div>
 
-            
+
             <div className="accountsList">
                 <h3>My Accounts</h3>
                 {accounts.length === 0 ? (
@@ -168,20 +172,20 @@ const getCalculatedBalance = (accountId, initialBalance) => {
                             const accountTxs = getAccountTransactions(account._id);
                             const income = getAccountIncome(account._id);
                             const expenditure = getAccountExpenditure(account._id);
-                            
+
                             return (
-                                <div 
-                                    key={account._id || account.accountNumber} 
+                                <div
+                                    key={account._id || account.accountNumber}
                                     className="account-card"
                                     onClick={() => handleAccountClick(account._id)}
                                     style={{ cursor: 'pointer' }}
                                 >
                                     <h4>{account.accountName}</h4>
                                     <p className="balance">
-                                    {getCalculatedBalance(account._id, account.balance).toFixed(3)} BHD
+                                        {getCalculatedBalance(account._id, account.balance).toFixed(3)} BHD
                                     </p>
                                     <div style={{ fontSize: '0.9em', marginTop: '10px', color: '#666' }}>
-                                     <p>Transactions: {accountTxs.length}</p>
+                                        <p>Transactions: {accountTxs.length}</p>
                                     </div>
                                 </div>
                             );
@@ -189,8 +193,12 @@ const getCalculatedBalance = (accountId, initialBalance) => {
                     </div>
                 )}
             </div>
+
+            <h3>Add New Transaction</h3>
+            <button onClick={() => navigate("/transactions")}>
+                Go to Transactions
+            </button>
         </div>
-        
     );
 };
 export default Account;

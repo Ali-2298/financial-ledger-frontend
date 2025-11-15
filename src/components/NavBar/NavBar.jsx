@@ -30,7 +30,6 @@ const NavBar = () => {
           <li>Welcome, {user.username}</li>
           <li><Link to='/'>Dashboard</Link></li>
           <li><Link to='/account'>Account</Link></li>
-          <li><Link to='/transaction'>Transaction</Link></li>
            <li><Link to='/Budget'>Budget</Link></li>
           <li><Link to='/' onClick={handleSignOut}>Sign Out</Link></li>
         </ul>
