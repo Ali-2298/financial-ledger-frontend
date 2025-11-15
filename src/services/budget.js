@@ -31,6 +31,8 @@ const createBudget = async (budgetData) => {
       body: JSON.stringify(budgetData)
     });
 
+    console.log(budgetData)
+
     if (!res.ok) {
       const errData = await res.json();
       throw new Error(errData.message || 'Failed to create budget');
