@@ -88,9 +88,9 @@ const Transactions = () => {
     }
   };
 
-  const displayedCategories = newTransaction.type === "income"
+  const displayedCategories = newTransaction.type === "Income"
     ? incomeCategories
-    : newTransaction.type === "expenditure"
+    : newTransaction.type === "Expenditure"
       ? expenditureCategories
       : [];
 
@@ -102,8 +102,8 @@ const Transactions = () => {
           <label>Type:</label>
           <select name="type" value={newTransaction.type} onChange={handleInputChange} required>
             <option value="">Select Type</option>
-            <option value="income">Income</option>
-            <option value="expenditure">Expenditure</option>
+            <option value="Income">Income</option>
+            <option value="Expenditure">Expenditure</option>
           </select>
 
           <label>Category:</label>
