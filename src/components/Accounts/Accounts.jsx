@@ -194,9 +194,8 @@ const Account = () => {
                 )}
             </div>
 
-            <h3>Add New Transaction</h3>
             <button onClick={() => navigate("/transactions")}>
-                Go to Transactions
+                New Transaction
             </button>
         </div>
     );
