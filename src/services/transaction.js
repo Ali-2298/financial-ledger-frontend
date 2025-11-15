@@ -49,9 +49,18 @@ const deleteTransaction = async (transactionId) => {
   return await res.json();
 };
 
+const getAllAccounts = async () => {
+  const res = await fetch(BASE_URL, {
+    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${localStorage.getItem("token")}` }
+  });
+  if (!res.ok) throw new Error("Failed to fetch accounts");
+  return res.json();
+};
+
 export { 
   getAllTransactions, 
   createTransaction, 
   updateTransaction, 
-  deleteTransaction 
+  deleteTransaction,
+  getAllAccounts
 };
