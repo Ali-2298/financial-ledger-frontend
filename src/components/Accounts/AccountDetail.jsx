@@ -100,10 +100,11 @@ const totalIncome = accountTransactions
 const totalExpenditure = accountTransactions
     .filter(t => t.type === 'expenditure')
     .reduce((sum, t) => sum + parseFloat(t.amount || 0), 0);
+    
 
     if (loading) return <div>Loading...</div>;
     if (!account) return <div>Account not found</div>;
-
+const calculatedBalance = parseFloat(account.balance) + totalIncome - totalExpenditure;
     return (
         <div className="dashboard">
             <button onClick={() => navigate('/account')}>← Back to Accounts</button>
@@ -182,7 +183,7 @@ const totalExpenditure = accountTransactions
                         
                         <div className="detail-row">
                             <strong>Balance:</strong>
-                            <span>${parseFloat(account.balance).toFixed(2)}</span>
+                        <span>{calculatedBalance.toFixed(3)} BHD</span>
                         </div>
                         <div className="detail-row">
                         <strong>Total Transactions:</strong>
@@ -191,12 +192,12 @@ const totalExpenditure = accountTransactions
 
                         <div className="detail-row">
                          <strong>Total Income:</strong>
-                         <span style={{ color: 'green' }}>${totalIncome.toFixed(2)}</span>
+                         <span style={{ color: 'green' }}>{totalIncome.toFixed(3)} BHD</span>
                         </div>
 
                         <div className="detail-row">
                         <strong>Total Expenses:</strong>
-                        <span style={{ color: 'red' }}>${totalExpenditure.toFixed(2)}</span>
+                        <span style={{ color: 'red' }}>{totalExpenditure.toFixed(3)} BHD</span>
                         </div>
                     </div>
                     
@@ -204,10 +205,40 @@ const totalExpenditure = accountTransactions
                         <button onClick={() => setIsEditing(true)}>Edit</button>
                         <button onClick={handleDelete}>Delete</button>
                     </div>
+                    <div style={{ marginTop: '30px' }}>
+    <h3>Recent Transactions</h3>
+    {accountTransactions.length === 0 ? (
+        <p>No transactions for this account yet.</p>
+    ) : (
+        <div>
+            {accountTransactions.slice(0, 5).map((transaction) => (
+                <div key={transaction._id} style={{ 
+                    padding: '10px', 
+                    borderBottom: '1px solid #ccc',
+                    marginBottom: '10px'
+                }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <span><strong>{transaction.category}</strong></span>
+                        <span style={{ 
+                            color: transaction.type === 'income' ? 'green' : 'red',
+                            fontWeight: 'bold'
+                        }}>
+                            {transaction.type === 'income' ? '+' : '-'}{parseFloat(transaction.amount).toFixed(3)} BHD
+                        </span>
+                    </div>
+                    <div style={{ fontSize: '0.9em', color: '#666' }}>
+                        {transaction.description} • {new Date(transaction.transactionDate).toLocaleDateString()}
+                    </div>
+                </div>
+            ))}
+        </div>
+    )}
+</div>
                 </>
             )}
         </div>
     );
 };
+
 
 export default AccountDetail;

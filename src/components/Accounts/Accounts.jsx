@@ -99,6 +99,12 @@ const Account = () => {
             .filter(t => t.type === 'expenditure')
             .reduce((sum, t) => sum + parseFloat(t.amount || 0), 0);
     };
+const getCalculatedBalance = (accountId, initialBalance) => {
+    const income = getAccountIncome(accountId);
+    const expenditure = getAccountExpenditure(accountId);
+    return parseFloat(initialBalance) + income - expenditure;
+};
+
 
     return (
         <div className="dashboard">
@@ -151,6 +157,7 @@ const Account = () => {
                 </div>
             </div>
 
+            
             <div className="accountsList">
                 <h3>My Accounts</h3>
                 {accounts.length === 0 ? (
@@ -171,10 +178,10 @@ const Account = () => {
                                 >
                                     <h4>{account.accountName}</h4>
                                     <p className="balance">
-                                        ${parseFloat(account.balance).toFixed(2)}
+                                    {getCalculatedBalance(account._id, account.balance).toFixed(3)} BHD
                                     </p>
                                     <div style={{ fontSize: '0.9em', marginTop: '10px', color: '#666' }}>
-                                        <p>Transactions: {accountTxs.length}</p>
+                                     <p>Transactions: {accountTxs.length}</p>
                                     </div>
                                 </div>
                             );
@@ -183,6 +190,7 @@ const Account = () => {
                 )}
             </div>
         </div>
+        
     );
 };
 export default Account;
