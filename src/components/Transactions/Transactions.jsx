@@ -9,6 +9,7 @@ const Transactions = () => {
     type: "",
     category: "",
     amount: "",
+    currency: "BHD",
     description: "",
     transactionDate: "",
     accountId: ""
@@ -53,7 +54,7 @@ const Transactions = () => {
         const saved = await createTransaction(newTransaction);
         setTransactions([...transactions, saved]);
       }
-      setNewTransaction({ type: "", category: "", amount: "", description: "", transactionDate: "", accountId: "" });
+      setNewTransaction({ type: "", category: "", amount: "", currency: "", description: "", transactionDate: "", accountId: "" });
     } catch (err) {
       console.error(err);
       alert(err.message);
@@ -65,6 +66,7 @@ const Transactions = () => {
       type: t.type,
       category: t.category,
       amount: t.amount,
+      currency: t.currency,
       description: t.description,
       transactionDate: t.transactionDate.split('T')[0],
       accountId: t.account?._id || ""
@@ -74,7 +76,7 @@ const Transactions = () => {
 
   const handleCancel = () => {
     setEditId(null);
-    setNewTransaction({ type: "", category: "", amount: "", description: "", transactionDate: "", accountId: "" });
+    setNewTransaction({ type: "", category: "", amount: "", currency: "", description: "", transactionDate: "", accountId: "" });
   };
 
   const handleDelete = async (id) => {
@@ -138,6 +140,9 @@ const Transactions = () => {
           <label>Amount:</label>
           <input type="number" name="amount" value={newTransaction.amount} onChange={handleInputChange} required />
 
+          <label>Currency:</label>
+          <input type="text" name="currency" value={newTransaction.currency} onChange={handleInputChange} readOnly />
+
           <label>Description:</label>
           <input type="text" name="description" value={newTransaction.description} onChange={handleInputChange} required />
 
@@ -159,6 +164,7 @@ const Transactions = () => {
               <p><strong>Type:</strong> {t.type}</p>
               <p><strong>Category:</strong> {t.category}</p>
               <p><strong>Account:</strong> {t.account?.accountName || "Unnamed Account"}</p>
+              <p><strong>Amount:</strong> {t.amount} <strong>{t.currency}</strong></p>
               <p><strong>Date:</strong> {new Date(t.transactionDate).toLocaleDateString()}</p>
               <p><strong>Description:</strong> {t.description}</p>
               <button onClick={() => handleEdit(t)}>Edit</button>
