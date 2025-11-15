@@ -3,6 +3,7 @@
 // Import the useContext hook
 import { useContext } from 'react';
 import { Link } from 'react-router';
+import 'milligram/dist/milligram.min.css';
 
 // Import the UserContext object
 import { UserContext } from '../../contexts/UserContext';
@@ -31,7 +32,6 @@ const NavBar = () => {
           <li><Link to='/'>Dashboard</Link></li>
           <li><Link to='/account'>Account</Link></li>
           <li><Link to='/transaction'>Transaction</Link></li>
-           <li><Link to='/Budget'>Budget</Link></li>
           <li><Link to='/' onClick={handleSignOut}>Sign Out</Link></li>
         </ul>
       ) : (
@@ -46,4 +46,3 @@ const NavBar = () => {
 };
 
 export default NavBar;
-

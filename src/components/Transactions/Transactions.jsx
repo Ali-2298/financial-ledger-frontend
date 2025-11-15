@@ -1,101 +1,95 @@
-import { useState, useEffect } from 'react';
-import { getAllTransactions, createTransaction, updateTransaction, deleteTransaction } from '../../services/transaction';
-import { getAllAccounts } from '../../services/accounts';
+import { useState, useEffect } from "react";
+import {
+  getAllTransactions,
+  createTransaction,
+  updateTransaction,
+  deleteTransaction
+} from "../../services/transaction";
 
 const Transactions = () => {
+  const userId = "1234567890"; // replace with actual logged-in user ID
+
   const [transactions, setTransactions] = useState([]);
-  const [accounts, setAccounts] = useState([]);
   const [newTransaction, setNewTransaction] = useState({
     type: "",
     category: "",
     amount: "",
     description: "",
-    transactionDate: "",
-    accountId: ""
+    transactionDate: ""
   });
   const [editId, setEditId] = useState(null);
 
-  const incomeCategories = ["Salary","Commission","Interest Income","Investment Earnings","Other"];
-  const expenditureCategories = ["Rent Expense","Electricity Bill","Utilities Bill","Internet Bill","Petrol","Groceries","Investments Purchase","Other"];
+  const incomeCategories = ["Salary", "Commission", "Interest Income", "Investment Earnings", "Other"];
+  const expenditureCategories = ["Rent Expense", "Electricity Bill", "Utilities Bill", "Internet Bill", "Petrol", "Groceries", "Investments Purchase", "Other"];
 
+  // Fetch transactions
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchTransactions = async () => {
       try {
-        const tx = await getAllTransactions();
-        const acc = await getAllAccounts();
-        console.log("Fetched accounts:", acc); 
-        setTransactions(tx);
-        setAccounts(acc);
+        const data = await getAllTransactions(userId);
+        setTransactions(data);
       } catch (err) {
         console.error(err);
       }
     };
-    fetchData();
+    fetchTransactions();
   }, []);
 
+  // Handle input change
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    if (name === "type") {
-      setNewTransaction({ ...newTransaction, type: value, category: "" });
-    } else {
-      setNewTransaction({ ...newTransaction, [name]: value });
-    }
+    setNewTransaction({ ...newTransaction, [name]: value });
   };
 
+  // Add or update transaction
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const payload = { ...newTransaction, userId };
       if (editId) {
-        const updated = await updateTransaction(editId, newTransaction);
+        const updated = await updateTransaction(editId, payload);
         setTransactions(transactions.map(t => t._id === editId ? updated : t));
         setEditId(null);
       } else {
-        const saved = await createTransaction(newTransaction);
+        const saved = await createTransaction(payload);
         setTransactions([...transactions, saved]);
       }
-      setNewTransaction({ type: "", category: "", amount: "", description: "", transactionDate: "", accountId: "" });
+      setNewTransaction({ type: "", category: "", amount: "", description: "", transactionDate: "" });
     } catch (err) {
       console.error(err);
       alert(err.message);
     }
   };
 
+  // Edit transaction
   const handleEdit = (t) => {
     setNewTransaction({
       type: t.type,
       category: t.category,
       amount: t.amount,
       description: t.description,
-      transactionDate: t.transactionDate.split('T')[0],
-      accountId: t.account?._id || ""
+      transactionDate: t.transactionDate.split("T")[0]
     });
     setEditId(t._id);
   };
 
-  const handleCancel = () => {
-    setEditId(null);
-    setNewTransaction({ type: "", category: "", amount: "", description: "", transactionDate: "", accountId: "" });
-  };
+  // Delete transaction
+ const handleDelete = async (transactionId) => {
+  if (!window.confirm("Are you sure you want to delete this transaction?")) return;
 
-  const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this transaction?")) return;
-    try {
-      await deleteTransaction(id);
-      setTransactions(transactions.filter(t => t._id !== id));
-    } catch (err) {
-      console.error(err);
-      alert(err.message);
-    }
-  };
-
-  const displayedCategories = newTransaction.type === "income"
-    ? incomeCategories
-    : newTransaction.type === "expenditure"
-      ? expenditureCategories
-      : [];
+  try {
+    await deleteTransaction(transactionId, userId);
+    setTransactions(transactions.filter(t => t._id !== transactionId));
+  } catch (err) {
+    console.error(err);
+    alert(err.message);
+  }
+};
 
   return (
     <div className="dashboard">
+
+      {/* Transaction Form */}
       <div className="formDiv">
         <h3>{editId ? "Edit Transaction" : "Add New Transaction"}</h3>
         <form onSubmit={handleSubmit}>
@@ -107,32 +101,10 @@ const Transactions = () => {
           </select>
 
           <label>Category:</label>
-          <select
-            name="category"
-            value={newTransaction.category}
-            onChange={handleInputChange}
-            required
-            disabled={!newTransaction.type}
-          >
-            <option value="">{newTransaction.type ? "Select Category" : "Select Type first"}</option>
-            {displayedCategories.map((c, i) => (
-              <option key={i} value={c}>{c}</option>
-            ))}
-          </select>
-
-          <label>Account:</label>
-          <select
-            name="accountId"
-            value={newTransaction.accountId}
-            onChange={handleInputChange}
-            required
-          >
-            <option value="">Select Account</option>
-            {accounts.map(acc => (
-              <option key={acc._id} value={acc._id}>
-                {acc.accountName || "Unnamed Account"}
-              </option>
-            ))}
+          <select name="category" value={newTransaction.category} onChange={handleInputChange} required>
+            <option value="">Select Category</option>
+            {newTransaction.type === "income" && incomeCategories.map((c, i) => <option key={i} value={c}>{c}</option>)}
+            {newTransaction.type === "expenditure" && expenditureCategories.map((c, i) => <option key={i} value={c}>{c}</option>)}
           </select>
 
           <label>Amount:</label>
@@ -144,27 +116,30 @@ const Transactions = () => {
           <label>Date:</label>
           <input type="date" name="transactionDate" value={newTransaction.transactionDate} onChange={handleInputChange} required />
 
-          <button type="submit">{editId ? "Update" : "Add"}</button>
-          {editId && <button type="button" onClick={handleCancel}>Cancel</button>}
+          <button type="submit">{editId ? "Update Transaction" : "Add Transaction"}</button>
         </form>
       </div>
 
+      {/* Recent Transactions */}
       <div className="transactionsList">
         <h3>Recent Transactions</h3>
         {transactions.length === 0 ? (
           <p>No transactions yet!</p>
         ) : (
-          transactions.map(t => (
-            <div key={t._id} className="transaction-card">
-              <p><strong>Type:</strong> {t.type}</p>
-              <p><strong>Category:</strong> {t.category}</p>
-              <p><strong>Account:</strong> {t.account?.accountName || "Unnamed Account"}</p>
-              <p><strong>Date:</strong> {new Date(t.transactionDate).toLocaleDateString()}</p>
-              <p><strong>Description:</strong> {t.description}</p>
-              <button onClick={() => handleEdit(t)}>Edit</button>
-              <button onClick={() => handleDelete(t._id)}>Delete</button>
-            </div>
-          ))
+          <div className="transactions-grid">
+            {transactions.map(t => (
+              <div key={t._id} className="transaction-card">
+                <h4>{t.description}</h4>
+                {t.type === "income" && <p>Income: ${parseFloat(t.amount).toFixed(2)}</p>}
+                {t.type === "expenditure" && <p>Outcome: ${parseFloat(t.amount).toFixed(2)}</p>}
+                <p>Amount: ${parseFloat(t.amount).toFixed(2)}</p>
+                <p>Category: {t.category}</p>
+                <p>Date: {new Date(t.transactionDate).toLocaleDateString()}</p>
+                <button onClick={() => handleEdit(t)}>Edit</button>
+                <button onClick={() => handleDelete(t._id)}>Delete</button>
+              </div>
+            ))}
+          </div>
         )}
       </div>
     </div>

@@ -1,8 +1,12 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router'
+import { getAllTransactions } from '../../services/transaction';
+import Transactions from '../Transactions/Transactions';
 
 const Account = () => {
 
     const [accounts, setAccounts] = useState([]);
+    const [transactions, setTransactions] = useState([]);
     const [newAccount, setNewAccount] = useState({
         accountName: "",
         accountType: "",
@@ -10,23 +14,30 @@ const Account = () => {
         balance: ""
     });
 
+    const navigate = useNavigate();
+
     useEffect(() => {
-        const fetchAccounts = async () => {
+        const fetchData = async () => {
             try {
-                const response = await fetch('http://localhost:3000/api/accounts', {
+                // Fetch accounts
+                const accountResponse = await fetch('http://localhost:3000/api/accounts', {
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('token')}`
                     }
                 });
-                if (!response.ok) throw new Error('Failed to fetch accounts');
-                const data = await response.json();
-                setAccounts(data);
+                if (!accountResponse.ok) throw new Error('Failed to fetch accounts');
+                const accountData = await accountResponse.json();
+                setAccounts(accountData);
+
+                // Fetch transactions
+                const txs = await getAllTransactions();
+                setTransactions(txs);
             } catch (err) {
                 console.error(err);
             }
         };
 
-        fetchAccounts();
+        fetchData();
     }, []);
 
     const handleInputChange = (event) => {
@@ -38,7 +49,7 @@ const Account = () => {
         try {
             const response = await fetch('http://localhost:3000/api/accounts', {
                 method: 'POST',
-                headers: { 
+                headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 },
@@ -71,8 +82,8 @@ const Account = () => {
     };
 
     const handleAccountClick = (accountId) => {
-    window.location.href = `/account/${accountId}`;
-};
+        window.location.href = `/account/${accountId}`;
+    };
 
     return (
         <div className="dashboard">
@@ -87,7 +98,7 @@ const Account = () => {
                         onChange={handleInputChange}
                         required
                     />
-                    
+
                     <label htmlFor="accountType">Type:</label>
                     <select
                         id="accountType"
@@ -125,6 +136,7 @@ const Account = () => {
                 </div>
             </div>
 
+
             <div className="accountsList">
                 <h3>My Accounts</h3>
                 {accounts.length === 0 ? (
@@ -133,11 +145,11 @@ const Account = () => {
                     <div className="accounts-grid">
                         {accounts.map((account) => (
                             <div 
-                                key={account._id || account.accountNumber} 
+                                key={account.id || account.accountNumber} 
                                 className="account-card"
-                                onClick={() => handleAccountClick(account._id)}
+                                onClick={() => handleAccountClick(account.id)}
                                 style={{ cursor: 'pointer' }}
-                                >
+                            >
                                 <h4>{account.accountName}</h4>
                                 <p className="balance">
                                     ${parseFloat(account.balance).toFixed(2)}
@@ -147,6 +159,10 @@ const Account = () => {
                     </div>
                 )}
             </div>
+
+            <button onClick={() => navigate("/transactions")}>
+                New Transaction
+            </button>
         </div>
     );
 };
