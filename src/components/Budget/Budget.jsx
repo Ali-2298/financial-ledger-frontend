@@ -57,7 +57,7 @@ const Budget = () => {
     if (!user?._id) return;
     setLoading(true);
     setError(null);
-    const payload = { ...newBudget, userId: user._id };
+    const payload = { ...newBudget, owner: user._id };
     try {
       let saved;
       if (editId) {
