@@ -1,87 +1,66 @@
 const BASE_URL = `${import.meta.env.VITE_BACK_END_SERVER_URL}/api/transactions`;
 
-const getAllTransactions = async () => {
-  try {
-    const res = await fetch(BASE_URL, {
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        'Content-Type': 'application/json'
-      }
-    });
+const getTokenHeader = () => ({
+  'Authorization': `Bearer ${localStorage.getItem('token')}`,
+  'Content-Type': 'application/json'
+});
 
-    if (!res.ok) {
-      throw new Error('Failed to fetch transactions');
-    }
-    return await res.json();
-  } catch (err) {
-    console.error(err);
-    throw err;
-  }
+const getAllTransactions = async () => {
+  const res = await fetch(BASE_URL, { headers: getTokenHeader() });
+  if (!res.ok) throw new Error('Failed to fetch transactions');
+  return await res.json();
 };
 
 const createTransaction = async (transactionData) => {
-  try {
-    const res = await fetch(BASE_URL, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(transactionData)
-    });
-
-    if (!res.ok) {
-      const errData = await res.json();
-      throw new Error(errData.message || 'Failed to create transaction');
-    }
-    return await res.json();
-  } catch (err) {
-    console.error(err);
-    throw err;
+  const res = await fetch(BASE_URL, {
+    method: 'POST',
+    headers: getTokenHeader(),
+    body: JSON.stringify(transactionData)
+  });
+  if (!res.ok) {
+    const errData = await res.json();
+    throw new Error(errData.message || 'Failed to create transaction');
   }
+  return await res.json();
 };
 
 const updateTransaction = async (transactionId, updatedData) => {
   const res = await fetch(`${BASE_URL}/${transactionId}`, {
     method: 'PUT',
-    headers: {
-      'Authorization': `Bearer ${localStorage.getItem('token')}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      type: updatedData.type,
-      category: updatedData.category,
-      amount: updatedData.amount,
-      description: updatedData.description,
-      transactionDate: updatedData.transactionDate,
-    })
+    headers: getTokenHeader(),
+    body: JSON.stringify(updatedData)
   });
-
   if (!res.ok) {
-    const errorData = await res.json();
-    throw new Error(errorData.error || 'Failed to update transaction');
+    const errData = await res.json();
+    throw new Error(errData.error || 'Failed to update transaction');
   }
   return await res.json();
 };
 
-const deleteTransaction = async (transactionId, userId) => {
-  const res = await fetch(`${BASE_URL}/${transactionId}?userId=${userId}`, {
+const deleteTransaction = async (transactionId) => {
+  const res = await fetch(`${BASE_URL}/${transactionId}`, {
     method: 'DELETE',
-    headers: { 'Content-Type': 'application/json' }
+    headers: getTokenHeader()
   });
-
   if (!res.ok) {
-    const errorData = await res.json();
-    throw new Error(errorData.error || 'Failed to delete transaction');
+    const errData = await res.json();
+    throw new Error(errData.error || 'Failed to delete transaction');
   }
-
   return await res.json();
 };
 
+const getAllAccounts = async () => {
+  const res = await fetch(BASE_URL, {
+    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${localStorage.getItem("token")}` }
+  });
+  if (!res.ok) throw new Error("Failed to fetch accounts");
+  return res.json();
+};
 
-export {
-  getAllTransactions,
-  createTransaction,
-  updateTransaction,
-  deleteTransaction
+export { 
+  getAllTransactions, 
+  createTransaction, 
+  updateTransaction, 
+  deleteTransaction,
+  getAllAccounts
 };

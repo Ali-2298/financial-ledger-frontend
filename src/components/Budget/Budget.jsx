@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { UserContext } from '../../contexts/UserContext';
-import { getAllBudgets, createBudget, updateBudget, deleteBudget } from '../../services/budgetService'; // Your API service module
+import { getAllBudgets, createBudget, updateBudget,  deleteBudget } from '../../services/budget'; // Your API service module
 
 const Budget = () => {
   const { user } = useContext(UserContext);

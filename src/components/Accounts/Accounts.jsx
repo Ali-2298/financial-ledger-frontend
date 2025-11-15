@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
+import { getAllTransactions } from '../../services/transaction';
 
 const Account = () => {
 
     const [accounts, setAccounts] = useState([]);
+    const [transactions, setTransactions] = useState([]);
     const [newAccount, setNewAccount] = useState({
         accountName: "",
         accountType: "",
@@ -11,22 +13,27 @@ const Account = () => {
     });
 
     useEffect(() => {
-        const fetchAccounts = async () => {
+        const fetchData = async () => {
             try {
-                const response = await fetch('http://localhost:3000/api/accounts', {
+                // Fetch accounts
+                const accountResponse = await fetch('http://localhost:3000/api/accounts', {
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('token')}`
                     }
                 });
-                if (!response.ok) throw new Error('Failed to fetch accounts');
-                const data = await response.json();
-                setAccounts(data);
+                if (!accountResponse.ok) throw new Error('Failed to fetch accounts');
+                const accountData = await accountResponse.json();
+                setAccounts(accountData);
+
+                // Fetch transactions
+                const txs = await getAllTransactions();
+                setTransactions(txs);
             } catch (err) {
                 console.error(err);
             }
         };
 
-        fetchAccounts();
+        fetchData();
     }, []);
 
     const handleInputChange = (event) => {
@@ -71,8 +78,27 @@ const Account = () => {
     };
 
     const handleAccountClick = (accountId) => {
-    window.location.href = `/account/${accountId}`;
-};
+        window.location.href = `/account/${accountId}`;
+    };
+
+    // Get transactions for a specific account
+    const getAccountTransactions = (accountId) => {
+        return transactions.filter(t => t.account?._id === accountId);
+    };
+
+    // Calculate total income for an account
+    const getAccountIncome = (accountId) => {
+        return getAccountTransactions(accountId)
+            .filter(t => t.type === 'income')
+            .reduce((sum, t) => sum + parseFloat(t.amount || 0), 0);
+    };
+
+    // Calculate total expenditure for an account
+    const getAccountExpenditure = (accountId) => {
+        return getAccountTransactions(accountId)
+            .filter(t => t.type === 'expenditure')
+            .reduce((sum, t) => sum + parseFloat(t.amount || 0), 0);
+    };
 
     return (
         <div className="dashboard">
@@ -131,19 +157,28 @@ const Account = () => {
                     <p>No accounts yet. Add your first account above!</p>
                 ) : (
                     <div className="accounts-grid">
-                        {accounts.map((account) => (
-                            <div 
-                                key={account._id || account.accountNumber} 
-                                className="account-card"
-                                onClick={() => handleAccountClick(account._id)}
-                                style={{ cursor: 'pointer' }}
+                        {accounts.map((account) => {
+                            const accountTxs = getAccountTransactions(account._id);
+                            const income = getAccountIncome(account._id);
+                            const expenditure = getAccountExpenditure(account._id);
+                            
+                            return (
+                                <div 
+                                    key={account._id || account.accountNumber} 
+                                    className="account-card"
+                                    onClick={() => handleAccountClick(account._id)}
+                                    style={{ cursor: 'pointer' }}
                                 >
-                                <h4>{account.accountName}</h4>
-                                <p className="balance">
-                                    ${parseFloat(account.balance).toFixed(2)}
-                                </p>
-                            </div>
-                        ))}
+                                    <h4>{account.accountName}</h4>
+                                    <p className="balance">
+                                        ${parseFloat(account.balance).toFixed(2)}
+                                    </p>
+                                    <div style={{ fontSize: '0.9em', marginTop: '10px', color: '#666' }}>
+                                        <p>Transactions: {accountTxs.length}</p>
+                                    </div>
+                                </div>
+                            );
+                        })}
                     </div>
                 )}
             </div>

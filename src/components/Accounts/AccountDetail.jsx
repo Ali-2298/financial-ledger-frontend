@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from "react-router";
+import { getAllTransactions } from '../../services/transaction';
 
 const AccountDetail = () => {
     const { accountId } = useParams();
     const navigate = useNavigate();
     const [account, setAccount] = useState(null);
+    const [transactions, setTransactions] = useState([]);
     const [loading, setLoading] = useState(true);
     const [isEditing, setIsEditing] = useState(false);
     const [editedAccount, setEditedAccount] = useState({
@@ -15,33 +17,37 @@ const AccountDetail = () => {
     });
 
     useEffect(() => {
-        const fetchAccount = async () => {
-            try {
-                const response = await fetch(`http://localhost:3000/api/accounts/${accountId}`, {
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`
-                    }
-                });
-                
-                if (!response.ok) throw new Error('Failed to fetch account');
-                
-                const data = await response.json();
-                setAccount(data);
-                setEditedAccount({
-                    accountName: data.accountName,
-                    accountType: data.accountType,
-                    accountNumber: data.accountNumber,
-                    balance: data.balance
-                });
-                setLoading(false);
-            } catch (err) {
-                console.error(err);
-                setLoading(false);
-            }
-        };
+    const fetchData = async () => {
+        try {
+            const response = await fetch(`http://localhost:3000/api/accounts/${accountId}`, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+            
+            if (!response.ok) throw new Error('Failed to fetch account');
+            
+            const data = await response.json();
+            setAccount(data);
+            setEditedAccount({
+                accountName: data.accountName,
+                accountType: data.accountType,
+                accountNumber: data.accountNumber,
+                balance: data.balance
+            });
 
-        fetchAccount();
-    }, [accountId]);
+            const txs = await getAllTransactions();
+            setTransactions(txs);
+            
+            setLoading(false);
+        } catch (err) {
+            console.error(err);
+            setLoading(false);
+        }
+    };
+
+    fetchData();
+}, [accountId]);
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
@@ -85,6 +91,15 @@ const AccountDetail = () => {
             console.error(err);
         }
     };
+const accountTransactions = transactions.filter(t => t.account?._id === accountId);
+
+const totalIncome = accountTransactions
+    .filter(t => t.type === 'income')
+    .reduce((sum, t) => sum + parseFloat(t.amount || 0), 0);
+
+const totalExpenditure = accountTransactions
+    .filter(t => t.type === 'expenditure')
+    .reduce((sum, t) => sum + parseFloat(t.amount || 0), 0);
 
     if (loading) return <div>Loading...</div>;
     if (!account) return <div>Account not found</div>;
@@ -168,6 +183,20 @@ const AccountDetail = () => {
                         <div className="detail-row">
                             <strong>Balance:</strong>
                             <span>${parseFloat(account.balance).toFixed(2)}</span>
+                        </div>
+                        <div className="detail-row">
+                        <strong>Total Transactions:</strong>
+                        <span>{accountTransactions.length}</span>
+                        </div>
+
+                        <div className="detail-row">
+                         <strong>Total Income:</strong>
+                         <span style={{ color: 'green' }}>${totalIncome.toFixed(2)}</span>
+                        </div>
+
+                        <div className="detail-row">
+                        <strong>Total Expenses:</strong>
+                        <span style={{ color: 'red' }}>${totalExpenditure.toFixed(2)}</span>
                         </div>
                     </div>
                     
