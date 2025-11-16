@@ -10,12 +10,20 @@ const getAllBudgets = async () => {
     });
 
     if (!res.ok) {
-      throw new Error('Failed to fetch budgets');
+      const contentType = res.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
+        const errData = await res.json();
+        throw new Error(errData.message || 'Failed to fetch budgets');
+      } else {
+        const text = await res.text();
+        console.error('Received non-JSON response:', text);
+        throw new Error(`Server error: ${res.status} ${res.statusText}`);
+      }
     }
 
     return await res.json();
   } catch (err) {
-    console.error(err);
+    console.error('Error fetching budgets:', err);
     throw err;
   }
 };
@@ -34,13 +42,22 @@ const createBudget = async (budgetData) => {
     console.log(budgetData)
 
     if (!res.ok) {
-      const errData = await res.json();
-      throw new Error(errData.message || 'Failed to create budget');
+      // Check if response is JSON before parsing
+      const contentType = res.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
+        const errData = await res.json();
+        throw new Error(errData.message || 'Failed to create budget');
+      } else {
+        // If not JSON, it might be HTML error page
+        const text = await res.text();
+        console.error('Received non-JSON response:', text);
+        throw new Error(`Server error: ${res.status} ${res.statusText}`);
+      }
     }
 
     return await res.json();
   } catch (err) {
-    console.error(err);
+    console.error('Error creating budget:', err);
     throw err;
   }
 };
@@ -56,13 +73,20 @@ const updateBudget = async (budgetId, budgetData) => {
     });
 
     if (!res.ok) {
-      const errData = await res.json();
-      throw new Error(errData.message || 'Failed to update budget');
+      const contentType = res.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
+        const errData = await res.json();
+        throw new Error(errData.message || 'Failed to update budget');
+      } else {
+        const text = await res.text();
+        console.error('Received non-JSON response:', text);
+        throw new Error(`Server error: ${res.status} ${res.statusText}`);
+      }
     }
 
     return await res.json();
   } catch (err) {
-    console.error(err);
+    console.error('Error updating budget:', err);
     throw err;
   }
 };
@@ -77,13 +101,20 @@ const deleteBudget = async (budgetId) => {
     });
 
     if (!res.ok) {
-      const errData = await res.json();
-      throw new Error(errData.message || 'Failed to delete budget');
+      const contentType = res.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
+        const errData = await res.json();
+        throw new Error(errData.message || 'Failed to delete budget');
+      } else {
+        const text = await res.text();
+        console.error('Received non-JSON response:', text);
+        throw new Error(`Server error: ${res.status} ${res.statusText}`);
+      }
     }
 
     return await res.json();
   } catch (err) {
-    console.error(err);
+    console.error('Error deleting budget:', err);
     throw err;
   }
 };

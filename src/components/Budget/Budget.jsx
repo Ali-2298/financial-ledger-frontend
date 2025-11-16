@@ -37,7 +37,12 @@ const Budget = () => {
   useEffect(() => {
     if (!selectedBudgetId) return;
     setLoading(true);
-    fetch(`/api/budgets/${selectedBudgetId}/report`)
+    fetch(`${import.meta.env.VITE_BACK_END_SERVER_URL}/api/budgets/${selectedBudgetId}/report`, {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': 'application/json'
+      }
+    })
       .then(res => {
         if (!res.ok) throw new Error('Error loading budget report');
         return res.json();

@@ -46,6 +46,7 @@ const Dashboard = () => {
         setBudgetReport(data);
       } catch (err) {
         console.error(err);
+        
       }
     };
 
