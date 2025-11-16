@@ -41,7 +41,6 @@ const Dashboard = () => {
     fetchData();
   }, [user]);
 
-  // Calculate account balance with transactions
   const getAccountBalance = (account, transactions) => {
     const income = transactions
       .filter(t => t.account?._id === account._id && t.type === 'Income')
@@ -67,7 +66,6 @@ const Dashboard = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-4 md:p-8">
       <div className="max-w-4xl mx-auto">
         
-        {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mb-2">
             Dashboard
@@ -75,7 +73,6 @@ const Dashboard = () => {
           <p className="text-slate-600">Welcome back, {user?.username}</p>
         </div>
 
-        {/* Account Balances */}
         <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 md:p-8 mb-6">
           <h2 className="text-2xl font-bold text-slate-900 mb-6">Account Balances</h2>
           
@@ -124,7 +121,6 @@ const Dashboard = () => {
           )}
         </div>
 
-        {/* Last Transaction */}
         <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 md:p-8">
           <h2 className="text-2xl font-bold text-slate-900 mb-6">Last Transaction</h2>
           

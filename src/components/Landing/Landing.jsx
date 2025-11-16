@@ -8,7 +8,6 @@ const Landing = () => {
   return (
     <div className="min-h-screen bg-slate-50">
       
-      {/* Hero Section */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
         <div className="text-center">
           <div className="inline-block bg-blue-600 p-3 rounded-lg mb-6">
@@ -44,7 +43,6 @@ const Landing = () => {
         </div>
       </section>
 
-      {/* Features Section */}
       <section className="bg-white py-16">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl md:text-3xl font-bold text-slate-900 mb-8 text-center">

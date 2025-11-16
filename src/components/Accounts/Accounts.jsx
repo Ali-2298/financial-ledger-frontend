@@ -110,23 +110,19 @@ const Account = () => {
         <div className="min-h-screen bg-slate-50 p-4 md:p-8">
             <div className="max-w-6xl mx-auto">
                 
-                {/* Header */}
                 <div className="mb-6">
                     <h1 className="text-3xl font-bold text-slate-900 mb-2">My Accounts</h1>
                     <p className="text-slate-600">Manage your financial accounts</p>
                 </div>
 
-                {/* Total Balance */}
                 <div className="bg-blue-600 rounded-lg p-6 mb-6 text-white">
                     <p className="text-sm opacity-90 mb-1">Total Balance</p>
                     <p className="text-4xl font-bold">{totalBalance.toFixed(3)} BHD</p>
                     <p className="text-sm opacity-75 mt-1">Across {accounts.length} account{accounts.length !== 1 ? 's' : ''}</p>
                 </div>
 
-                {/* Main Grid */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     
-                    {/* Add Account Form */}
                     <div className="lg:col-span-1">
                         <div className="bg-white rounded-lg border border-slate-200 p-6">
                             <h3 className="text-lg font-bold text-slate-900 mb-4">Add New Account</h3>
@@ -204,7 +200,6 @@ const Account = () => {
                         </div>
                     </div>
 
-                    {/* Accounts List */}
                     <div className="lg:col-span-2">
                         <div className="bg-white rounded-lg border border-slate-200 p-6">
                             <h3 className="text-lg font-bold text-slate-900 mb-4">Your Accounts</h3>
@@ -239,18 +234,8 @@ const Account = () => {
                                                     </div>
                                                 </div>
 
-                                                <div className="flex items-center gap-4 pt-3 border-t border-slate-200 text-sm">
-                                                    <div>
-                                                        <span className="text-slate-500">Income: </span>
-                                                        <span className="font-semibold text-green-600">{income.toFixed(3)}</span>
-                                                    </div>
-                                                    <div>
-                                                        <span className="text-slate-500">Expenses: </span>
-                                                        <span className="font-semibold text-red-600">{expenditure.toFixed(3)}</span>
-                                                    </div>
-                                                    <div className="ml-auto">
-                                                        <span className="text-slate-500">{accountTxs.length} transactions</span>
-                                                    </div>
+                                                <div className="pt-3 border-t border-slate-200 text-sm text-slate-500">
+                                                    {accountTxs.length} transaction{accountTxs.length !== 1 ? 's' : ''}
                                                 </div>
                                             </div>
                                         );
@@ -259,7 +244,6 @@ const Account = () => {
                             )}
                         </div>
 
-                        {/* Action Button */}
                         <div className="mt-4">
                             <button 
                                 onClick={() => navigate("/transactions")}

@@ -100,16 +100,13 @@ const Transactions = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
         
-        {/* Page Header */}
         <div className="mb-8">
           <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mb-2">Transactions</h1>
           <p className="text-slate-600">Manage your income and expenditure records</p>
         </div>
 
-        {/* Main Grid Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           
-          {/* Form Section */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 sticky top-6">
               <h3 className="text-xl font-bold text-slate-900 mb-6">
@@ -118,7 +115,6 @@ const Transactions = () => {
               
               <div className="space-y-4" onSubmit={handleSubmit}>
                 
-                {/* Type */}
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-2">
                     Type <span className="text-red-500">*</span>
@@ -136,7 +132,6 @@ const Transactions = () => {
                   </select>
                 </div>
 
-                {/* Category */}
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-2">
                     Category <span className="text-red-500">*</span>
@@ -156,7 +151,6 @@ const Transactions = () => {
                   </select>
                 </div>
 
-                {/* Account */}
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-2">
                     Account <span className="text-red-500">*</span>
@@ -177,7 +171,6 @@ const Transactions = () => {
                   </select>
                 </div>
 
-                {/* Amount */}
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-2">
                     Amount (BHD) <span className="text-red-500">*</span>
@@ -194,7 +187,6 @@ const Transactions = () => {
                   />
                 </div>
 
-                {/* Description */}
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-2">
                     Description <span className="text-red-500">*</span>
@@ -210,7 +202,6 @@ const Transactions = () => {
                   />
                 </div>
 
-                {/* Date */}
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-2">
                     Date <span className="text-red-500">*</span>
@@ -225,7 +216,6 @@ const Transactions = () => {
                   />
                 </div>
 
-                {/* Buttons */}
                 <div className="flex gap-3 pt-2">
                   <button 
                     onClick={handleSubmit}
@@ -246,7 +236,6 @@ const Transactions = () => {
             </div>
           </div>
 
-          {/* Transactions List Section */}
           <div className="lg:col-span-2">
             <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
               <h3 className="text-xl font-bold text-slate-900 mb-6">Recent Transactions</h3>
@@ -270,7 +259,6 @@ const Transactions = () => {
                     >
                       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                         
-                        {/* Transaction Info */}
                         <div className="flex-1 space-y-2">
                           <div className="flex items-center gap-3">
                             <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
@@ -307,7 +295,6 @@ const Transactions = () => {
                           </p>
                         </div>
 
-                        {/* Action Buttons */}
                         <div className="flex sm:flex-col gap-2">
                           <button 
                             onClick={() => handleEdit(t)}

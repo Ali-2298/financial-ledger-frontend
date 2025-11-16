@@ -55,8 +55,7 @@ const Budget = () => {
     setNewBudget(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     if (!user?._id) return;
     setLoading(true);
     setError(null);
@@ -133,43 +132,34 @@ const Budget = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-4 md:p-8">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-slate-50 p-4 md:p-8">
+      <div className="max-w-6xl mx-auto">
         
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mb-2">Budget Manager</h1>
+        <div className="mb-6">
+          <h1 className="text-3xl font-bold text-slate-900 mb-2">Budget Manager</h1>
           <p className="text-slate-600">Create and track your financial budgets</p>
         </div>
 
-        {/* Error Alert */}
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 flex items-center gap-2">
-            <span className="text-xl">⚠️</span>
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 flex items-center justify-between">
             <p>{error}</p>
-            <button onClick={() => setError(null)} className="ml-auto text-red-500 hover:text-red-700">✕</button>
+            <button onClick={() => setError(null)} className="text-red-500 hover:text-red-700">×</button>
           </div>
         )}
 
-        {/* Main Grid Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           
-          {/* Budget Form */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 sticky top-6">
-              <div className="flex items-center gap-2 mb-6">
-                <span className="text-2xl">📊</span>
-                <h3 className="text-xl font-bold text-slate-900">
-                  {editId ? 'Edit Budget' : 'Create Budget'}
-                </h3>
-              </div>
+            <div className="bg-white rounded-lg border border-slate-200 p-6">
+              <h3 className="text-lg font-bold text-slate-900 mb-4">
+                {editId ? 'Edit Budget' : 'Create Budget'}
+              </h3>
               
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-4">
                 
-                {/* Budget Name */}
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
-                    Budget Name <span className="text-red-500">*</span>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">
+                    Budget Name
                   </label>
                   <input 
                     name='name' 
@@ -177,32 +167,30 @@ const Budget = () => {
                     value={newBudget.name} 
                     onChange={handleInputChange} 
                     required
-                    className="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-lg text-slate-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                    className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                   />
                 </div>
 
-                {/* Period Type */}
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
-                    Period Type <span className="text-red-500">*</span>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">
+                    Period Type
                   </label>
                   <select 
                     name='periodType' 
                     value={newBudget.periodType} 
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-lg text-slate-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                    className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                   >
-                    <option value='monthly'>📅 Monthly</option>
-                    <option value='weekly'>📆 Weekly</option>
-                    <option value='custom'>🔧 Custom</option>
+                    <option value='monthly'>Monthly</option>
+                    <option value='weekly'>Weekly</option>
+                    <option value='custom'>Custom</option>
                   </select>
                 </div>
 
-                {/* Date Range */}
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">
-                      Start Date <span className="text-red-500">*</span>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">
+                      Start Date
                     </label>
                     <input 
                       type='date' 
@@ -210,12 +198,12 @@ const Budget = () => {
                       value={newBudget.startDate} 
                       onChange={handleInputChange} 
                       required
-                      className="w-full px-3 py-2.5 bg-white border border-slate-300 rounded-lg text-slate-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                      className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">
-                      End Date <span className="text-red-500">*</span>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">
+                      End Date
                     </label>
                     <input 
                       type='date' 
@@ -223,15 +211,14 @@ const Budget = () => {
                       value={newBudget.endDate} 
                       onChange={handleInputChange} 
                       required
-                      className="w-full px-3 py-2.5 bg-white border border-slate-300 rounded-lg text-slate-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                      className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                     />
                   </div>
                 </div>
 
-                {/* Currency */}
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
-                    Currency <span className="text-red-500">*</span>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">
+                    Currency
                   </label>
                   <input 
                     name='currency' 
@@ -240,14 +227,13 @@ const Budget = () => {
                     onChange={handleInputChange} 
                     placeholder="BHD"
                     required
-                    className="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-lg text-slate-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all uppercase"
+                    className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none uppercase"
                   />
                 </div>
 
-                {/* Alert Threshold */}
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
-                    Alert Threshold (%) <span className="text-red-500">*</span>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">
+                    Alert Threshold (%)
                   </label>
                   <input 
                     type='number' 
@@ -256,40 +242,36 @@ const Budget = () => {
                     name='alertThresholdPercent' 
                     value={newBudget.alertThresholdPercent} 
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-lg text-slate-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                    className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                   />
                   <p className="text-xs text-slate-500 mt-1">Get notified when spending reaches this percentage</p>
                 </div>
 
-                {/* Buttons */}
                 <div className="flex gap-3 pt-2">
                   <button 
-                    type='submit' 
+                    onClick={handleSubmit}
                     disabled={loading}
-                    className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-400 text-white font-medium py-2.5 px-4 rounded-lg transition-colors shadow-sm"
+                    className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-400 text-white font-medium py-2 px-4 rounded-lg transition-colors"
                   >
-                    {loading ? '⏳ Saving...' : (editId ? '💾 Update' : '➕ Create')}
+                    {loading ? 'Saving...' : (editId ? 'Update' : 'Create')}
                   </button>
                   {editId && (
                     <button 
-                      type="button"
                       onClick={handleCancel}
-                      className="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium py-2.5 px-4 rounded-lg transition-colors"
+                      className="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium py-2 px-4 rounded-lg transition-colors"
                     >
                       Cancel
                     </button>
                   )}
                 </div>
-              </form>
+              </div>
             </div>
           </div>
 
-          {/* Budgets List & Report */}
           <div className="lg:col-span-2 space-y-6">
             
-            {/* Budgets List */}
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-              <h3 className="text-xl font-bold text-slate-900 mb-6">Your Budgets</h3>
+            <div className="bg-white rounded-lg border border-slate-200 p-6">
+              <h3 className="text-lg font-bold text-slate-900 mb-4">Your Budgets</h3>
               
               {loading && !editId && (
                 <div className="text-center py-8">
@@ -300,8 +282,7 @@ const Budget = () => {
 
               {!loading && budgets.length === 0 && (
                 <div className="text-center py-12">
-                  <div className="text-6xl mb-4">📊</div>
-                  <p className="text-slate-500 text-lg">No budgets yet!</p>
+                  <p className="text-slate-500">No budgets yet!</p>
                   <p className="text-slate-400 text-sm mt-1">Create your first budget to start tracking expenses</p>
                 </div>
               )}
@@ -313,29 +294,26 @@ const Budget = () => {
                       key={budget._id}
                       className={`border rounded-lg p-4 transition-all cursor-pointer ${
                         selectedBudgetId === budget._id 
-                          ? 'border-blue-500 bg-blue-50 shadow-md' 
-                          : 'border-slate-200 bg-slate-50 hover:border-blue-300 hover:shadow-sm'
+                          ? 'border-blue-500 bg-blue-50' 
+                          : 'border-slate-200 hover:border-blue-300 hover:bg-slate-50'
                       }`}
                       onClick={() => setSelectedBudgetId(budget._id)}
                     >
-                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                      <div className="flex items-center justify-between gap-3">
                         <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-2">
-                            <span className="text-xl">
-                              {budget.periodType === 'monthly' ? '📅' : budget.periodType === 'weekly' ? '📆' : '🔧'}
-                            </span>
-                            <h4 className="text-lg font-bold text-slate-900">{budget.name}</h4>
+                          <div className="flex items-center gap-2 mb-1">
+                            <h4 className="font-bold text-slate-900">{budget.name}</h4>
                             {selectedBudgetId === budget._id && (
                               <span className="text-xs bg-blue-600 text-white px-2 py-0.5 rounded-full">Active</span>
                             )}
                           </div>
                           <div className="text-sm text-slate-600">
-                            <span>📍 {new Date(budget.startDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
+                            <span>{new Date(budget.startDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
                             <span className="mx-2">→</span>
                             <span>{new Date(budget.endDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
                           </div>
                           <div className="text-sm text-slate-500 mt-1">
-                            💰 Alert at {budget.alertThresholdPercent}% • {budget.currency}
+                            Alert at {budget.alertThresholdPercent}% • {budget.currency}
                           </div>
                         </div>
 
@@ -345,14 +323,14 @@ const Budget = () => {
                             disabled={loading}
                             className="bg-blue-50 hover:bg-blue-100 text-blue-700 font-medium py-2 px-4 rounded-lg transition-colors text-sm"
                           >
-                            ✏️ Edit
+                            Edit
                           </button>
                           <button 
                             onClick={(e) => { e.stopPropagation(); handleDelete(budget._id); }} 
                             disabled={loading}
                             className="bg-red-50 hover:bg-red-100 text-red-700 font-medium py-2 px-4 rounded-lg transition-colors text-sm"
                           >
-                            🗑️ Delete
+                            Delete
                           </button>
                         </div>
                       </div>
@@ -362,9 +340,8 @@ const Budget = () => {
               )}
             </div>
 
-            {/* Budget Report */}
             {loading && selectedBudgetId && (
-              <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-8">
+              <div className="bg-white rounded-lg border border-slate-200 p-8">
                 <div className="text-center">
                   <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600 mx-auto mb-3"></div>
                   <p className="text-slate-500">Loading budget report...</p>
@@ -373,33 +350,26 @@ const Budget = () => {
             )}
 
             {budgetReport && !loading && (
-              <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-                <div className="flex items-center gap-2 mb-6">
-                  <span className="text-2xl">📈</span>
-                  <h3 className="text-xl font-bold text-slate-900">Budget Report: {budgetReport.budget.name}</h3>
-                </div>
+              <div className="bg-white rounded-lg border border-slate-200 p-6">
+                <h3 className="text-lg font-bold text-slate-900 mb-4">Budget Report: {budgetReport.budget.name}</h3>
 
-                {/* Report Summary */}
-                <div className="bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200 rounded-lg p-5 mb-6">
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-sm font-medium text-purple-700">Period</span>
-                    <span className="text-sm text-purple-600">
+                <div className="bg-blue-600 rounded-lg p-4 mb-6 text-white">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm opacity-90">Period</span>
+                    <span className="text-sm opacity-75">
                       {new Date(budgetReport.budget.startDate).toLocaleDateString('en-GB')} - {new Date(budgetReport.budget.endDate).toLocaleDateString('en-GB')}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-purple-700">Total Spent</span>
-                    <span className="text-3xl font-bold text-purple-900">
+                    <span className="text-sm opacity-90">Total Spent</span>
+                    <span className="text-2xl font-bold">
                       {budgetReport.totalSpent.toFixed(3)} {budgetReport.budget.currency}
                     </span>
                   </div>
                 </div>
 
-                {/* Spending by Account */}
                 <div>
-                  <h4 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
-                    <span>💳</span> Spending by Account
-                  </h4>
+                  <h4 className="font-bold text-slate-900 mb-3">Spending by Account</h4>
                   
                   {budgetReport.spentByAccount && Object.keys(budgetReport.spentByAccount).length === 0 ? (
                     <p className="text-slate-500 text-center py-8">No spending recorded for this period</p>
@@ -408,8 +378,8 @@ const Budget = () => {
                       {budgetReport.spentByAccount && Object.entries(budgetReport.spentByAccount).map(([accountName, accountData]) => (
                         <div key={accountName} className="border border-slate-200 rounded-lg p-4 bg-slate-50">
                           <div className="flex items-center justify-between mb-3 pb-3 border-b border-slate-200">
-                            <h5 className="text-lg font-bold text-slate-900">{accountName}</h5>
-                            <span className="text-xl font-bold text-slate-900">
+                            <h5 className="font-bold text-slate-900">{accountName}</h5>
+                            <span className="font-bold text-slate-900">
                               {accountData.total.toFixed(3)} {budgetReport.budget.currency}
                             </span>
                           </div>
@@ -424,8 +394,8 @@ const Budget = () => {
                                   <div className="flex items-center gap-2">
                                     <span className="text-sm font-medium text-slate-700">{categoryName}</span>
                                     {categoryData.alertTriggered && (
-                                      <span className="bg-red-100 text-red-700 text-xs font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
-                                        ⚠️ Alert
+                                      <span className="bg-red-100 text-red-700 text-xs font-bold px-2 py-0.5 rounded-full">
+                                        Alert
                                       </span>
                                     )}
                                   </div>

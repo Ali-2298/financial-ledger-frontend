@@ -41,7 +41,6 @@ const SignUpForm = () => {
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-slate-50 to-blue-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         
-        {/* Logo/Brand Section */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-purple-600 to-purple-700 rounded-2xl mb-4 shadow-lg">
             <span className="text-4xl">✍️</span>
@@ -50,10 +49,8 @@ const SignUpForm = () => {
           <p className="text-slate-600">Join Financial Ledger and take control of your finances</p>
         </div>
 
-        {/* Sign Up Card */}
         <div className="bg-white rounded-2xl shadow-xl border border-slate-200 p-8">
           
-          {/* Error Message */}
           {message && (
             <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 flex items-center gap-2">
               <span className="text-xl">⚠️</span>
@@ -63,7 +60,6 @@ const SignUpForm = () => {
 
           <form onSubmit={handleSubmit} className="space-y-5">
             
-            {/* Username Field */}
             <div>
               <label htmlFor='username' className="block text-sm font-medium text-slate-700 mb-2">
                 Username <span className="text-red-500">*</span>
@@ -83,7 +79,6 @@ const SignUpForm = () => {
               </div>
             </div>
 
-            {/* Password Field */}
             <div>
               <label htmlFor='password' className="block text-sm font-medium text-slate-700 mb-2">
                 Password <span className="text-red-500">*</span>
@@ -103,7 +98,6 @@ const SignUpForm = () => {
               </div>
             </div>
 
-            {/* Confirm Password Field */}
             <div>
               <label htmlFor='confirm' className="block text-sm font-medium text-slate-700 mb-2">
                 Confirm Password <span className="text-red-500">*</span>
@@ -132,8 +126,7 @@ const SignUpForm = () => {
               )}
             </div>
 
-            {/* Buttons */}
-            <div className="flex flex-col gap-3 pt-2">
+           <div className="flex flex-col gap-3 pt-2">
               <button 
                 type="submit"
                 disabled={isFormInvalid()}
@@ -151,7 +144,6 @@ const SignUpForm = () => {
             </div>
           </form>
 
-          {/* Sign In Link */}
           <div className="mt-6 pt-6 border-t border-slate-200 text-center">
             <p className="text-sm text-slate-600">
               Already have an account?{' '}
@@ -165,7 +157,6 @@ const SignUpForm = () => {
           </div>
         </div>
 
-        {/* Footer */}
         <p className="text-center text-sm text-slate-500 mt-6">
           By signing up, you agree to our terms and privacy policy
         </p>
