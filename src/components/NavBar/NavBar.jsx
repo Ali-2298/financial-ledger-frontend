@@ -41,8 +41,7 @@ const NavBar = () => {
               <span className="text-2xl">💰</span>
             </div>
             <div className="hidden sm:block">
-              <h1 className="text-xl font-bold text-slate-900">Financial Ledger</h1>
-              <p className="text-xs text-slate-500">Manage Your Finances</p>
+              <h1 className="text-xl font-bold text-slate-900">Cashly</h1>
             </div>
           </Link>
 
