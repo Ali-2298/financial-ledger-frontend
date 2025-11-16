@@ -1,49 +1,93 @@
 // src/components/NavBar/NavBar.jsx
 
-// Import the useContext hook
-import { useContext } from 'react';
-import { Link } from 'react-router';
-//import 'milligram/dist/milligram.min.css';
-
-// Import the UserContext object
+import { useContext, useState } from 'react';
+import { Link, useLocation } from 'react-router';
 import { UserContext } from '../../contexts/UserContext';
 
 const NavBar = () => {
-  // Pass the UserContext object to the useContext hook to access:
-  // - The user state (which we use here).
-  // - The setUser function to update the user state (which we aren't using).
-  //
-  // Destructure the object returned by the useContext hook for easy access
-  // to the data we added to the context with familiar names.
   const { user, setUser } = useContext(UserContext);
+  const location = useLocation();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-   const handleSignOut = () => {
-    // Clear the token from localStorage
+  const handleSignOut = () => {
     localStorage.removeItem('token');
-    // Clear the user state
     setUser(null);
+    setMobileMenuOpen(false);
   };
 
+  const isActive = (path) => location.pathname === path;
+
+  const NavLink = ({ to, children, onClick }) => (
+    <Link
+      to={to}
+      onClick={onClick}
+      className={`px-4 py-2 rounded-lg font-medium transition-all ${
+        isActive(to)
+          ? 'bg-blue-600 text-white shadow-sm'
+          : 'text-slate-700 hover:bg-slate-100'
+      }`}
+    >
+      {children}
+    </Link>
+  );
+
   return (
-    <nav>
-      {user ? (
-        <ul>
-          <li>Welcome, {user.username}</li>
-          <li><Link to='/'>Dashboard</Link></li>
-          <li><Link to='/account'>Account</Link></li>
-           <li><Link to='/Budget'>Budget</Link></li>
-          <li><Link to='/' onClick={handleSignOut}>Sign Out</Link></li>
-        </ul>
-      ) : (
-        <ul>
-          <li><Link to='/'>Home</Link></li>
-          <li><Link to='/sign-up'>Sign Up</Link></li>
-          <li><Link to='/sign-in'>Sign In</Link></li>
-        </ul>
-      )}
+    <nav className="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+          
+          <Link to="/" className="flex items-center gap-3 group">
+            <div className="bg-gradient-to-br from-blue-600 to-blue-700 p-2 rounded-lg group-hover:scale-110 transition-transform">
+              <span className="text-2xl">💰</span>
+            </div>
+            <div className="hidden sm:block">
+              <h1 className="text-xl font-bold text-slate-900">Financial Ledger</h1>
+              <p className="text-xs text-slate-500">Manage Your Finances</p>
+            </div>
+          </Link>
+
+          {user ? (
+            <div className="hidden md:flex items-center gap-2">
+              <NavLink to="/">📊 Dashboard</NavLink>
+              <NavLink to="/account">💳 Accounts</NavLink>
+              <NavLink to="/budget">📈 Budget</NavLink>
+              
+              <div className="ml-4 pl-4 border-l border-slate-200 flex items-center gap-3">
+                <button
+                  onClick={handleSignOut}
+                  className="bg-red-50 hover:bg-red-100 text-red-700 px-4 py-2 rounded-lg font-medium transition-colors"
+                >
+                  🚪 Sign Out
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="hidden md:flex items-center gap-2">
+              <NavLink to="/">🏠 Home</NavLink>
+              <NavLink to="/sign-up">✍️ Sign Up</NavLink>
+              <Link
+                to="/sign-in"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors shadow-sm"
+              >
+                🔐 Sign In
+              </Link>
+            </div>
+          )}
+
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden p-2 rounded-lg text-slate-700 hover:bg-slate-100 transition-colors"
+          >
+            {mobileMenuOpen ? (
+              <span className="text-2xl">✕</span>
+            ) : (
+              <span className="text-2xl">☰</span>
+            )}
+          </button>
+        </div>
+      </div>
     </nav>
   );
 };
 
 export default NavBar;
-
