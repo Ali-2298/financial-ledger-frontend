@@ -38,7 +38,7 @@ const NavBar = () => {
           
           <Link to="/" className="flex items-center gap-3 group">
             <div className="bg-gradient-to-br from-blue-600 to-blue-700 p-2 rounded-lg group-hover:scale-110 transition-transform">
-              <span className="text-2xl">💰</span>
+              <span className="text-2xl"></span>
             </div>
             <div className="hidden sm:block">
               <h1 className="text-xl font-bold text-slate-900">Cashly</h1>
@@ -47,42 +47,31 @@ const NavBar = () => {
 
           {user ? (
             <div className="hidden md:flex items-center gap-2">
-              <NavLink to="/">📊 Dashboard</NavLink>
-              <NavLink to="/account">💳 Accounts</NavLink>
-              <NavLink to="/budget">📈 Budget</NavLink>
+              <NavLink to="/">Dashboard</NavLink>
+              <NavLink to="/account">Accounts</NavLink>
+              <NavLink to="/budget">Budget</NavLink>
               
               <div className="ml-4 pl-4 border-l border-slate-200 flex items-center gap-3">
                 <button
                   onClick={handleSignOut}
                   className="bg-red-50 hover:bg-red-100 text-red-700 px-4 py-2 rounded-lg font-medium transition-colors"
                 >
-                  🚪 Sign Out
+                  Sign Out
                 </button>
               </div>
             </div>
           ) : (
             <div className="hidden md:flex items-center gap-2">
-              <NavLink to="/">🏠 Home</NavLink>
-              <NavLink to="/sign-up">✍️ Sign Up</NavLink>
+              <NavLink to="/">Home</NavLink>
+              <NavLink to="/sign-up">Sign Up</NavLink>
               <Link
                 to="/sign-in"
                 className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors shadow-sm"
               >
-                🔐 Sign In
+                Sign In
               </Link>
             </div>
           )}
-
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 rounded-lg text-slate-700 hover:bg-slate-100 transition-colors"
-          >
-            {mobileMenuOpen ? (
-              <span className="text-2xl">✕</span>
-            ) : (
-              <span className="text-2xl">☰</span>
-            )}
-          </button>
         </div>
       </div>
     </nav>
