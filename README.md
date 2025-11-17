@@ -14,9 +14,6 @@ MERN Stack, Tailwind CSS.
 ## Future Enhancements
 In the future, we can enhance this application by visualizing our data through the reports or transactions made under each account. 
 
-## Entity Relationship Diagram:
-put image here
-
 ## Wireframes
 ```mermaid
 graph TD
