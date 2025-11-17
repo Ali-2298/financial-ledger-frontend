@@ -1,9 +1,23 @@
 ## Cashly 
 
-Entity Relationship Diagram:
+![alt text](image.png)
+
+## What is Cashly?
+Cashly is an application that provides user with the ability to track their own inflows and outflows. Using the mechanics of making an account, initiating new transactions, and making a budget plan, Cashly is able to perform this action for users. We collaborated on this project to make a financial ledger application that suits users who are interested in part taking personal finance, as well as its a highly used application and contemporary to the finance world. 
+
+## Backend Github Repository 
+https://github.com/Ali-2298/financial-ledger-backend
+
+## Libraries and Technologies
+MERN Stack, Tailwind CSS. 
+
+## Future Enhancements
+In the future, we can enhance this application by visualizing our data through the reports or transactions made under each account. 
+
+## Entity Relationship Diagram:
 put image here
 
-
+## Wireframes
 ```mermaid
 graph TD
     %% Models
