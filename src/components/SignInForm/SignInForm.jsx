@@ -32,12 +32,8 @@ const SignInForm = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-slate-50 to-purple-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        
+      <div className="w-full max-w-md"> 
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl mb-4 shadow-lg">
-            <span className="text-4xl">💰</span>
-          </div>
           <h1 className="text-3xl font-bold text-slate-900 mb-2">Welcome Back</h1>
           <p className="text-slate-600">Sign in to your Financial Ledger account</p>
         </div>
@@ -46,7 +42,7 @@ const SignInForm = () => {
           
           {message && (
             <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 flex items-center gap-2">
-              <span className="text-xl">⚠️</span>
+              <span className="text-xl"></span>
               <p className="text-sm">{message}</p>
             </div>
           )}
@@ -58,7 +54,7 @@ const SignInForm = () => {
                 Username
               </label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xl">👤</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xl"></span>
                 <input
                   type='text'
                   autoComplete='off'
@@ -78,7 +74,7 @@ const SignInForm = () => {
                 Password
               </label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xl">🔒</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xl"></span>
                 <input
                   type='password'
                   autoComplete='off'
@@ -98,7 +94,7 @@ const SignInForm = () => {
                 type="submit"
                 className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium py-3 px-4 rounded-lg transition-all shadow-sm"
               >
-                🔐 Sign In
+                Sign In
               </button>
               <button 
                 type="button"
@@ -122,10 +118,6 @@ const SignInForm = () => {
             </p>
           </div>
         </div>
-
-        <p className="text-center text-sm text-slate-500 mt-6">
-          Secure financial management for your peace of mind
-        </p>
       </div>
     </div>
   );

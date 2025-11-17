@@ -42,9 +42,6 @@ const SignUpForm = () => {
       <div className="w-full max-w-md">
         
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-purple-600 to-purple-700 rounded-2xl mb-4 shadow-lg">
-            <span className="text-4xl">✍️</span>
-          </div>
           <h1 className="text-3xl font-bold text-slate-900 mb-2">Create Account</h1>
           <p className="text-slate-600">Join Financial Ledger and take control of your finances</p>
         </div>
@@ -53,7 +50,7 @@ const SignUpForm = () => {
           
           {message && (
             <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 flex items-center gap-2">
-              <span className="text-xl">⚠️</span>
+              <span className="text-xl"></span>
               <p className="text-sm">{message}</p>
             </div>
           )}
@@ -65,7 +62,7 @@ const SignUpForm = () => {
                 Username <span className="text-red-500">*</span>
               </label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xl">👤</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xl"></span>
                 <input
                   type='text'
                   id='username'
@@ -84,7 +81,7 @@ const SignUpForm = () => {
                 Password <span className="text-red-500">*</span>
               </label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xl">🔒</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xl"></span>
                 <input
                   type='password'
                   id='password'
@@ -103,7 +100,7 @@ const SignUpForm = () => {
                 Confirm Password <span className="text-red-500">*</span>
               </label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xl">✅</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xl"></span>
                 <input
                   type='password'
                   id='confirm'
@@ -121,7 +118,7 @@ const SignUpForm = () => {
               </div>
               {passwordConf && password !== passwordConf && (
                 <p className="text-xs text-red-600 mt-1 flex items-center gap-1">
-                  ⚠️ Passwords do not match
+                  Passwords do not match
                 </p>
               )}
             </div>
@@ -132,7 +129,7 @@ const SignUpForm = () => {
                 disabled={isFormInvalid()}
                 className="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 disabled:from-slate-300 disabled:to-slate-400 disabled:cursor-not-allowed text-white font-medium py-3 px-4 rounded-lg transition-all shadow-sm"
               >
-                ✍️ Sign Up
+                Sign Up
               </button>
               <button 
                 type="button"
@@ -143,23 +140,7 @@ const SignUpForm = () => {
               </button>
             </div>
           </form>
-
-          <div className="mt-6 pt-6 border-t border-slate-200 text-center">
-            <p className="text-sm text-slate-600">
-              Already have an account?{' '}
-              <button 
-                onClick={() => navigate('/sign-in')}
-                className="text-purple-600 hover:text-purple-700 font-medium"
-              >
-                Sign in here
-              </button>
-            </p>
-          </div>
         </div>
-
-        <p className="text-center text-sm text-slate-500 mt-6">
-          By signing up, you agree to our terms and privacy policy
-        </p>
       </div>
     </div>
   );
